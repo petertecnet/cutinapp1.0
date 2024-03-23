@@ -1,0 +1,38 @@
+.card {
+  border: 5px solid #147abe;
+  border-radius: 50px;
+  box-shadow: 0px -20px 34px rgb(70, 12, 228);
+  transform: scale(0.9);
+  background: linear-gradient(85deg, #2b023b, #000000); /* Gradiente de cores */
+  position: relative; /* Certifique-se de que o posicionamento seja relativo */
+  z-index: 1;
+  color: white;
+  padding: 10px;
+  margin-top: 50px;
+}
+
+.card:hover {
+  transform: scale(0.9);
+  box-shadow: 0px 20px 34px rgb(70, 12, 228);
+}
+
+.card-header {
+  background-color: #000000;
+  padding: 10px;
+}
+
+.card-title {
+  margin-bottom: 0;
+  border-radius: 50px;
+  font-size: 24px; /* Aumenta o tamanho da fonte */
+  text-align: center; /* Centraliza o texto */
+}
+
+.card-body {
+  padding-top: 10px;
+}
+
+.card-text {
+  margin-bottom: 0;
+  color: white;
+}

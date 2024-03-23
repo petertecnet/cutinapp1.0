@@ -1,0 +1,92 @@
+.navbar {
+  position: fixed; /* Faz o navbar ficar fixo no topo */
+  top: 0; /* Alinha o navbar ao topo da janela */
+  width: 100%; /* Garante que o navbar ocupe toda a largura */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #af0fee, #031c55); /* Gradiente de cores */
+  color: #ffffff;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-bottom: 200px;
+}
+.dropdown-item:hover{
+  color: #af0fee;
+}
+
+/* Estilos para tornar o navbar responsivo */
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-center {
+  display: flex;
+}
+
+.navbar-center a {
+  margin-right: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-right .user-menu {
+  position: relative;
+}
+
+.navbar-right .user-menu .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer; /* Adiciona o cursor pointer para indicar que é clicável */
+}
+
+.navbar-right .user-menu .dropdown-content {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 0;
+}
+
+/* Exibe o dropdown-content quando hover no user-menu ou quando o dropdown-content estiver em foco */
+.navbar-right .user-menu:hover .dropdown-content,
+.navbar-right .user-menu .dropdown-content:focus-within {
+  display: block;
+}
+
+.navbar-right .user-menu .dropdown-content p {
+  margin-bottom: 10px;
+}
+
+.navbar-right .user-menu .dropdown-content a,
+.navbar-right .user-menu .dropdown-content button {
+  display: block;
+  padding: 5px 0;
+  color: #333;
+  text-decoration: none;
+}
+
+.navbar-right .user-menu .dropdown-content a:hover,
+.navbar-right .user-menu .dropdown-content button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Adiciona um pequeno atraso para fechar o dropdown-content ao sair do user-menu */
+.navbar-right .user-menu:hover .dropdown-content {
+  transition-delay: 0.3s;
+}
