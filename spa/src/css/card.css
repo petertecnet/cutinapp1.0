@@ -1,19 +1,24 @@
 .card {
-  border: 5px solid #147abe;
+  border: 1px solid #147abe;
   border-radius: 50px;
   box-shadow: 0px -20px 34px rgb(70, 12, 228);
-  transform: scale(0.9);
-  background: linear-gradient(85deg, #2b023b, #000000); /* Gradiente de cores */
-  position: relative; /* Certifique-se de que o posicionamento seja relativo */
+  background: linear-gradient(85deg, #2b023b, #000000); 
+  position: relative; 
   z-index: 1;
   color: white;
-  padding: 10px;
-  margin-top: 50px;
+  padding: 50px;
+  margin-top: 100px;
 }
-
 .card:hover {
-  transform: scale(0.9);
-  box-shadow: 0px 20px 34px rgb(70, 12, 228);
+  border: 1px solid #147abe;
+  border-radius: 50px;
+  box-shadow: 0px -20px 34px rgb(70, 12, 228);
+  background: linear-gradient(85deg, #2b023b, #000000); 
+  position: relative; 
+  z-index: 1;
+  color: white;
+  padding: 50px;
+  margin-top: 100px;
 }
 
 .card-header {
