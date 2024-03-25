@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AuthController, UserController};
+use App\Http\Controllers\{AuthController, UserController, ProfileController};
 
 Route::group([
     'middleware' => 'api',
@@ -21,6 +20,7 @@ Route::group([
     Route::post('/password-update', [AuthController::class, 'resetPassword'])->name('passwordUpdate'); // Corrigido o nome da rota
     Route::post('/resend-code-email-verification', [AuthController::class, 'resendCodeEmailVerification'])->middleware('auth:api')->name('verification.resend'); // Corrigido o nome da rota
 });
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'user'
@@ -30,4 +30,16 @@ Route::group([
     Route::post('/new', [UserController::class, 'store'])->name('user.store');
     Route::post('/{user}', [UserController::class, 'update'])->name('update');
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+});
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'profile'
+], function ($router) {
+    Route::get('/', [ProfileController::class, 'list'])->name('profile.list');
+    Route::get('/{id}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/', [ProfileController::class, 'store'])->name('profile.store'); // Adicionando a rota para o método store
+    Route::put('/{id}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
