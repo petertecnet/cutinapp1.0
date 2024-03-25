@@ -1,7 +1,6 @@
 import axios from "axios";
 import { apiBaseUrl } from "../config";
 
-
 const apiServiceUrl = "auth";
 
 const authService = {
@@ -187,6 +186,33 @@ const authService = {
     } catch (error) {
       console.error(error);
       throw new Error("Erro ao redefinir a senha. Por favor, tente novamente.");
+    }
+  },
+  resendCodeEmailVerification: async () => {
+    try {
+      const token = authService.getToken();
+      if (!token) {
+        throw new Error("Usuário não autenticado.");
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.post(
+        `${apiBaseUrl}/${apiServiceUrl}/resend-code-email-verification`,
+        {}, // Remova o segundo parâmetro se a rota não esperar dados adicionais
+        { headers }
+      );
+
+      if (response.status === 200) {
+        return true;
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(
+        "Erro ao reenviar o código de verificação. Por favor, tente novamente."
+      );
     }
   },
 };

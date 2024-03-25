@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Mail\ResetPasswordMail;
+use App\Mail\ResendVerificationCodeMail;
 use Validator;
 use Exception;
 
@@ -328,6 +328,38 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
-
+    public function resendCodeEmailVerification()
+    {
+        try {
+    
+            // Busca pelo usuário com o e-mail fornecido
+            $user = auth()->user();
+    
+            if (!$user) {
+                return response()->json(['message' => 'Nenhum usuário encontrado com este e-mail.'], 404);
+            }
+    
+            // Geração de um novo código de verificação
+            $newVerificationCode = Str::random(4);
+    
+            // Atualização do código de verificação no banco de dados
+            $user->verification_code = $newVerificationCode;
+            $user->save();
+    
+            // Envio do e-mail de verificação com o novo código
+            Mail::to($user->email)->send(new ResendVerificationCodeMail($newVerificationCode, $user));
+    
+            return response()->json(['message' => 'Novo código de verificação enviado com sucesso.'], 200);
+        } catch (ValidationException $e) {
+            // Captura de exceções de validação
+            Log::error('ValidationException: ' . $e->getMessage());
+            $errors = $e->errors();
+            return response()->json(['message' => 'Erro de validação', 'errors' => $errors], 422);
+        } catch (\Exception $e) {
+            // Captura de outras exceções
+            Log::error('Exception: ' . $e->getMessage());
+            return response()->json(['message' => 'Erro ao reenviar o código de verificação. Por favor, tente novamente.'], 500);
+        }
+    }
 
 }
