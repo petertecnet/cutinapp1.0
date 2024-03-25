@@ -18,6 +18,7 @@ Route::group([
     Route::post('/email-verify', [AuthController::class, 'emailVerify'])->middleware('auth:api')->name('emailVerify');
     Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:api')->name('changePassword');
     Route::post('/password-update', [AuthController::class, 'resetPassword'])->name('passwordUpdate'); // Corrigido o nome da rota
+    Route::post('/resend-code-email-verification', [AuthController::class, 'resendCodeEmailVerification'])->middleware('auth:api')->name('verification.resend'); // Corrigido o nome da rota
 });
 
 Route::group([
@@ -26,8 +27,8 @@ Route::group([
 ], function ($router) {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
-    Route::post('/newuser', [UserController::class, 'store'])->name('user.store');
-    Route::post('/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::post('/new', [UserController::class, 'store'])->name('user.store');
+    Route::post('/{user}', [UserController::class, 'update'])->name('update');
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 });
 

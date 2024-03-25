@@ -40,10 +40,32 @@ const EmailVerifyPage = () => {
         "Erro na verificação de email. Por favor, tente novamente mais tarde."
       );
     } finally {
-      window.location.href = "/dashboard";
       setLoading(false);
     }
   };
+
+  const handleResendVerificationCode = async () => {
+    setLoading(true);
+    try {
+  
+      const codeResent = await authService.resendCodeEmailVerification();
+  
+      if (codeResent) {
+        showAlert("success", "Código de verificação reenviado com sucesso.");
+      } else {
+        showAlert("danger", "Erro ao reenviar o código de verificação.");
+      }
+    } catch (error) {
+      console.error(error);
+      showAlert(
+        "danger",
+        "Erro ao reenviar o código de verificação. Por favor, tente novamente mais tarde."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   const showAlert = (type, message) => {
     setAlertType(type);
@@ -58,10 +80,10 @@ const EmailVerifyPage = () => {
   return (
     <div className="App">
       <Navlog />
-      <Container >
+      <Container>
         <Row className="justify-content-center mt-5">
           <Col md={6} className="mt-5">
-          <Card className="text-white bg-black text-center">
+            <Card className="text-white bg-black text-center">
               <Card.Body>
                 <div className="text-center">
                   {" "}
@@ -77,7 +99,10 @@ const EmailVerifyPage = () => {
                 <Card.Title className="text-center">Verificar Email</Card.Title>
                 <Form onSubmit={handleVerifyEmail}>
                   <Form.Group className="mb-3">
-                    <p>Por favor, digite o codigo de verificação para confirmar seu email.</p>
+                    <p>
+                      Por favor, digite o código de verificação para confirmar
+                      seu email.
+                    </p>
                     <Form.Label>Código de Verificação</Form.Label>
                     <Form.Control
                       type="text"
@@ -93,6 +118,15 @@ const EmailVerifyPage = () => {
                     </Button>
                   </div>
                 </Form>
+                <div className="text-center mt-3">
+                  <Button
+                    variant="outline-primary"
+                    onClick={handleResendVerificationCode}
+                    disabled={loading}
+                  >
+                    Reenviar Código de Verificação
+                  </Button>
+                </div>
                 {showAlertState && (
                   <Alert
                     show={showAlertState}
