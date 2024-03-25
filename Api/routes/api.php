@@ -26,10 +26,11 @@ Route::group([
 ], function ($router) {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
-    Route::post('/', [UserController::class, 'store'])->name('user.store');
-    Route::post('/{user}', [UserController::class, 'update'])->name('update');
+    Route::post('/newuser', [UserController::class, 'store'])->name('user.store');
+    Route::post('/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 });
+
 
 Route::group([
     'middleware' => 'api',
