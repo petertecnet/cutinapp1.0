@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Nav, Navbar, Container } from "react-bootstrap";
+import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
 import authService from "../services/AuthService";
 import { storageUrl } from "../config";
 
@@ -11,7 +11,7 @@ import {
   BsGear,
   BsBoxArrowRight,
   BsChevronDown,
-  BsChevronRight // Adicionado o ícone de seta para a direita
+  BsChevronRight
 } from "react-icons/bs";
 import "../css/navlog.css";
 
@@ -38,8 +38,8 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
-      <Container>
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className=" rounded">
+      <Container >
         <Navbar.Brand as={Link} to="/">
           <img
             src="/images/loadingimage.gif"
@@ -60,6 +60,12 @@ const Navigation = () => {
             <Nav.Link as={Link} to="/artits">
               Artistas
             </Nav.Link>
+            {user && (
+              <NavDropdown title="Administrador" id="admin-dropdown">
+                <NavDropdown.Item as={Link} to="/users">Usuários</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/profile/list">Perfis</NavDropdown.Item>
+              </NavDropdown>
+            )}
           </Nav>
           {user && (
             <div className="user-menu dropdown">
@@ -71,15 +77,15 @@ const Navigation = () => {
                 aria-expanded="false"
                 style={{ maxWidth: "50px", borderRadius: "50%" }}
               />
-              {isMenuOpen ? ( // Adicionada a classe condicional para determinar a orientação da seta
-                <BsChevronRight // Ícone da seta virado para a direita
+              {isMenuOpen ? (
+                <BsChevronRight
                   className="dropdown-toggle" 
-                  style={{ color: "#fff", cursor: "pointer", transform: "rotate(90deg)" }} // Rotação da seta
+                  style={{ color: "#fff", cursor: "pointer", transform: "rotate(90deg)" }}
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 />
               ) : (
-                <BsChevronDown // Ícone da seta para baixo
+                <BsChevronDown
                   className="dropdown-toggle" 
                   style={{ color: "#fff", cursor: "pointer" }}
                   data-bs-toggle="dropdown"
@@ -93,7 +99,7 @@ const Navigation = () => {
                   </p>
                 </li>
                 <li>
-                  <Nav.Link as={Link} to="/profile" className="dropdown-item m-4">
+                  <Nav.Link as={Link} to="/user/edit" className="dropdown-item m-4">
                     <BsPerson /> Meu perfil
                   </Nav.Link>
                 </li>

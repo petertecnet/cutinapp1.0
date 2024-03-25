@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
@@ -14,7 +18,11 @@ class UserController extends Controller
     protected function getValidationMessages()
     {
         return [
-            'first_name.required' => 'O campo :attribute é obrigatório.',
+            'first_name.required' => 'O campo :attribute é obrigatório.', 
+            'email.required' => 'O campo e-mail é obrigatório.',
+            'email.email' => 'O e-mail deve ser um endereço de e-mail válido.',
+            'email.unique' => 'Este e-mail já está sendo utilizado por outro usuário.',
+        
             'avatar.image' => 'O arquivo deve ser uma imagem.',
             'avatar.mimes' => 'O arquivo deve ter um formato de imagem válido (jpeg, png, jpg, gif).',
             'avatar.max' => 'O tamanho máximo do arquivo é de 2MB.',
@@ -36,7 +44,7 @@ class UserController extends Controller
             // Verificar se o usuário tem permissão para atualizar
             if ($user->id != $userId && !$user->hasPermission('update_user')) {
                 Log::error('Usuário não tem permissão para atualizar este usuário.');
-                return response()->json(['error' => 'Você não tem permissão para atualizar este usuário.'], 403);
+                return response()->json(['error' => ' Você não tem permissão para atualizar este usuário.'], 403);
             }
 
             // Validar os dados recebidos
@@ -97,13 +105,33 @@ class UserController extends Controller
             if ($request->has('verification_code')) {
                 $userToUpdate->verification_code = $request->input('verification_code');
             }
+
             if ($request->has('avatar')) {
                 $avatar = $request->file('avatar');
                 $userId = $userToUpdate->id;
                 $extension = $avatar->getClientOriginalExtension();
                 $avatarName = $userId . '-' . time() . '.' . $extension;
-                $avatar->storeAs('public/users/' . $userId . '/avatar', $avatarName); // Armazene a imagem na pasta específica do usuário
-                $userToUpdate->avatar = 'users/' . $userId . '/avatar/' . $avatarName; // Armazene apenas o caminho relativo da imagem
+                $avatarPath = 'public/users/' . $userId . '/avatar';
+
+                // Salva a imagem original
+                $avatar->storeAs($avatarPath, $avatarName);
+
+                // Abre a imagem com o Intervention Image
+                $image = Image::make(storage_path('app/' . $avatarPath . '/' . $avatarName));
+
+                // Redimensiona a imagem para 500x500 mantendo a proporção
+                $image->resize(250, 250, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                // Salva a imagem redimensionada
+                $image->save(storage_path('app/' . $avatarPath . '/' . $avatarName));
+
+                // Atualiza o caminho do avatar no usuário
+                $userToUpdate->avatar = 'users/' . $userId . '/avatar/' . $avatarName;
+            } else {
+                // Log de erro se não houver arquivo de avatar enviado
+                error_log("Nenhum arquivo de avatar enviado.");
             }
             if ($request->has('password')) {
                 $userToUpdate->password = bcrypt($request->input('password'));
@@ -192,7 +220,7 @@ class UserController extends Controller
 
             // Salvar as alterações no banco de dados
             $userToUpdate->save();
-            
+
             Log::info('Usuário atualizado com sucesso: ' . $userToUpdate->id);
             // Retornar uma resposta de sucesso
             return response()->json(['message' => 'Usuário atualizado com sucesso.'], 200);
@@ -202,5 +230,44 @@ class UserController extends Controller
             return response()->json(['error' => 'Ocorreu um erro ao atualizar o usuário.'], 500);
         }
     }
+
+    public function store(Request $request)
+    {
+        try {
+            // Validar os dados recebidos
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required',
+                'email' => 'required|email|unique:users',
+            ], $this->getValidationMessages());
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()->first()], 400);
+            }
+
+            // Gerar um código de verificação aleatório
+            $verificationCode = Str::random(6);
+            // Gerar um código de verificação aleatório
+            $password = Str::random(10);
+
+            // Criar o usuário
+            $newUser = User::create([
+                'first_name' => $request->input('first_name'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($password),
+                'verification_code' => $verificationCode,
+            ]);
+
+            // Enviar e-mail de boas-vindas com o código de verificação
+            Mail::to($newUser->email)->send(new WelcomeMail($verificationCode, $newUser, $password)); // Passe a senha como argumento
+
+            // Retornar uma mensagem de sucesso
+            return response()->json(['message' => 'Novo usuário cadastrado com sucesso.'], 201);
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao cadastrar novo usuário: ' . $e->getMessage());
+            return response()->json(['error' => 'Ocorreu um erro ao cadastrar o novo usuário.'], 500);
+        }
+    }
+   
 }
 
