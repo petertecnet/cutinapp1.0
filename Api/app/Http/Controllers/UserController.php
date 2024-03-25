@@ -268,6 +268,34 @@ class UserController extends Controller
             return response()->json(['error' => 'Ocorreu um erro ao cadastrar o novo usuário.'], 500);
         }
     }
+
+    public function list(Request $request)
+    {
+        try {
+            // Verificar se o usuário está autenticado
+            $user = Auth::user();
+            if (!$user) {
+                Log::error('Usuário não autenticado.');
+                return response()->json(['error' => 'Usuário não autenticado.'], 401);
+            }
+
+            // Verificar se o usuário tem permissão para listar usuários
+            if (!$user->hasPermission('user_list')) {
+                Log::error('Usuário não tem permissão para listar usuários.');
+                return response()->json(['error' => 'Você não tem permissão para listar usuários.'], 403);
+            }
+
+            // Buscar todos os usuários
+            $users = User::all();
+
+            // Retornar os usuários encontrados
+            return response()->json(['users' => $users], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao listar usuários: ' . $e->getMessage());
+            return response()->json(['error' => 'Ocorreu um erro ao listar usuários.'], 500);
+        }
+    }
    
 }
 

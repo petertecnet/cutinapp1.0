@@ -14,6 +14,8 @@ import PasswordPage from "./pages/PasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 
 import UserEditPage from "./pages/user/UserEditPage";
+import UserListPage from "./pages/user/UserListPage";
+import UserCreatePage from "./pages/user/UserCreatePage";
 
 import ProfileCreatePage from "./pages/profile/ProfileCreatePage";
 import ProfileListPage from "./pages/profile/ProfileListPage";
@@ -92,6 +94,8 @@ const App = () => {
 
         
         <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
+        <Route path="/user/list" element={protectedRoute(<UserListPage />)} />
+        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} />
 
         <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />

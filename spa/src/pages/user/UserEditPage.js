@@ -165,10 +165,9 @@ const ProfileEditPage = () => {
       <NavlogComponent />
       <Container fluid>
         <Row className="justify-content-center mt-4">
-          <Col md={4} >
+          <Col md={4}>
             <Card>
               <Card.Body>
-                <h2 className="text-center mb-4">Informações básicas</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Alert
                   show={showAlert}
@@ -313,7 +312,7 @@ const ProfileEditPage = () => {
           <Col xs={12} md={8}>
             <Card>
               <Card.Body>
-                <h2 className="text-center mt-4">Informações extras</h2>
+                <p className="text-center mt-4 h2">INFORMAÇÕES EXTRA</p>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Alert
                   show={showAlert}
@@ -343,7 +342,7 @@ const ProfileEditPage = () => {
                       </Form.Control>
                     </Form.Group>{" "}
                   </Col>
-                  <Col md={3} >
+                  <Col md={3}>
                     <Form.Group controlId="formOccupation" className="mt-4">
                       <Form.Control
                         type="text"
@@ -380,9 +379,7 @@ const ProfileEditPage = () => {
                     </Form.Group>{" "}
                   </Col>
                 </Row>
-                <Row>
-                  
-                </Row>
+                <Row></Row>
                 <Row>
                   <Col md={4}>
                     <Form.Group controlId="formAddress" className="mt-4">
@@ -458,10 +455,7 @@ const ProfileEditPage = () => {
                 >
                   Salvar Alterações
                 </Button>
-                <Link
-                  to="/password"
-                  className="btn bg-info m-4"
-                >
+                <Link to="/password" className="btn bg-info m-4">
                   Alterar senha
                 </Link>
                 {/* Exibir o alerta com temporizador */}
