@@ -62,7 +62,7 @@ const Navigation = () => {
             </Nav.Link>
             {user && (
               <NavDropdown title="Administrador" id="admin-dropdown">
-                <NavDropdown.Item as={Link} to="/users">Usuários</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/user/list">Usuários</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/profile/list">Perfis</NavDropdown.Item>
               </NavDropdown>
             )}

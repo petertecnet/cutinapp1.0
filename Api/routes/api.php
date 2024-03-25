@@ -25,13 +25,12 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'user'
 ], function ($router) {
-    Route::get('/', [UserController::class, 'index'])->name('user.index');
-    Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
+    Route::get('/', [UserController::class, 'list'])->name('user.list');
+    Route::get('/{id}', [UserController::class, 'show'])->name('user.show'); 
     Route::post('/new', [UserController::class, 'store'])->name('user.store');
-    Route::post('/{user}', [UserController::class, 'update'])->name('update');
+    Route::post('/{user}', [UserController::class, 'update'])->name('user.update'); // Deve ser post por causa da imagem
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 });
-
 
 Route::group([
     'middleware' => 'api',
@@ -39,7 +38,7 @@ Route::group([
 ], function ($router) {
     Route::get('/', [ProfileController::class, 'list'])->name('profile.list');
     Route::get('/{id}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/', [ProfileController::class, 'store'])->name('profile.store'); // Adicionando a rota para o método store
+    Route::post('/', [ProfileController::class, 'store'])->name('profile.store');
     Route::put('/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
