@@ -324,5 +324,39 @@ class UserController extends Controller
         }
     }
 
+    public function view($userName)
+    {
+        try {
+            // Verificar se o usuário está autenticado
+            $user = Auth::user();
+            if (!$user) {
+                Log::error('Usuário não autenticado.');
+                return response()->json(['error' => 'Usuário não autenticado.'], 401);
+            }
+    
+            // Verificar se o usuário tem permissão para visualizar o perfil do usuário
+            if (!$user->hasPermission('user_show')) {
+                Log::error('Usuário não tem permissão para visualizar este perfil de usuário.');
+                return response()->json(['error' => 'Você não tem permissão para visualizar este perfil de usuário.'], 403);
+            }
+    
+            // Buscar o usuário pelo user_name
+            $userToShow = User::with('productions.events')->where('user_name', $userName)->first();
+    
+            // Verificar se o usuário foi encontrado
+            if (!$userToShow) {
+                return response()->json(['error' => 'Usuário não encontrado.'], 404);
+            }
+    
+            // Retornar os dados do usuário, incluindo as produções e os eventos associados
+            return response()->json(['user' => $userToShow], 200);
+    
+        } catch (\Exception $e) {
+            Log::error('Erro ao mostrar o perfil do usuário: ' . $e->getMessage());
+            return response()->json(['error' => 'Ocorreu um erro ao mostrar o perfil do usuário.'], 500);
+        }
+    }
+
+
 }
 
