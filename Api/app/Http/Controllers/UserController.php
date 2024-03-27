@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
+use Intervention\Image\Facades\Image;
+
 class UserController extends Controller
 {
     // Função para obter mensagens de validação personalizadas
@@ -97,13 +99,33 @@ class UserController extends Controller
             if ($request->has('verification_code')) {
                 $userToUpdate->verification_code = $request->input('verification_code');
             }
+
             if ($request->has('avatar')) {
                 $avatar = $request->file('avatar');
                 $userId = $userToUpdate->id;
                 $extension = $avatar->getClientOriginalExtension();
                 $avatarName = $userId . '-' . time() . '.' . $extension;
-                $avatar->storeAs('public/users/' . $userId . '/avatar', $avatarName); // Armazene a imagem na pasta específica do usuário
-                $userToUpdate->avatar = 'users/' . $userId . '/avatar/' . $avatarName; // Armazene apenas o caminho relativo da imagem
+                $avatarPath = 'public/users/' . $userId . '/avatar';
+
+                // Salva a imagem original
+                $avatar->storeAs($avatarPath, $avatarName);
+
+                // Abre a imagem com o Intervention Image
+                $image = Image::make(storage_path('app/' . $avatarPath . '/' . $avatarName));
+
+                // Redimensiona a imagem para 500x500 mantendo a proporção
+                $image->resize(250, 250, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                // Salva a imagem redimensionada
+                $image->save(storage_path('app/' . $avatarPath . '/' . $avatarName));
+
+                // Atualiza o caminho do avatar no usuário
+                $userToUpdate->avatar = 'users/' . $userId . '/avatar/' . $avatarName;
+            } else {
+                // Log de erro se não houver arquivo de avatar enviado
+                error_log("Nenhum arquivo de avatar enviado.");
             }
             if ($request->has('password')) {
                 $userToUpdate->password = bcrypt($request->input('password'));
@@ -192,7 +214,7 @@ class UserController extends Controller
 
             // Salvar as alterações no banco de dados
             $userToUpdate->save();
-            
+
             Log::info('Usuário atualizado com sucesso: ' . $userToUpdate->id);
             // Retornar uma resposta de sucesso
             return response()->json(['message' => 'Usuário atualizado com sucesso.'], 200);

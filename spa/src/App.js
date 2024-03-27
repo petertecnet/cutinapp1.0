@@ -11,7 +11,8 @@ import PasswordEmailPage from "./pages/PasswordEmailPage";
 import PasswordPage from "./pages/PasswordPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
-import ProfilePage from "./pages/ProfileEditPage";
+import UserEditPage from "./pages/user/UserEditPage";
+import ProfileCreatePage from "./pages/profile/ProfileCreatePage";
 import EmailVerifyPage from "./pages/EmailVerifyPage";
 import LogoutPage from "./pages/LogoutPage";
 import LoadingComponent from "./components/LoadingComponent";
@@ -86,7 +87,8 @@ const App = () => {
           element={emailVerifiedRoute(<EmailVerifyPage />)}
         />
         <Route path="/dashboard" element={protectedRoute(<DashboardPage />)} />
-        <Route path="/profile" element={protectedRoute(<ProfilePage />)} />
+        <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
+        <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/settings" element={protectedRoute(<SettingsPage />)} />
         <Route path="/password" element={protectedRoute(<PasswordPage />)} />
         <Route path="/logout" element={(<LogoutPage />)} />

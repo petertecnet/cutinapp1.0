@@ -93,4 +93,20 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    public function profile()
+{
+    return $this->belongsTo(Profile::class);
+}
+public function hasProfile($profileName)
+{
+    return $this->profile && $this->profile->name === $profileName;
+}
+public function hasPermission($permissionName)
+{
+    if (!$this->profile || !is_array($this->profile->permissions)) {
+        return false;
+    }
+
+    return in_array($permissionName, $this->profile->permissions);
+}
 }
