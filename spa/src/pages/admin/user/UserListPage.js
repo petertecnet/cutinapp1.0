@@ -58,6 +58,7 @@ const UserListPage = () => {
                       <th>Avatar</th>
                       <th>Nome do Usuário</th>
                       <th>E-mail</th>
+                      <th>User Name</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -73,8 +74,6 @@ const UserListPage = () => {
                             }
                             alt="User Avatar"
                             className="avatar "
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
                             style={{ maxWidth: "50px", borderRadius: "50%" }}
                           />
                         </td>
@@ -82,6 +81,15 @@ const UserListPage = () => {
                           {user.first_name} {user.last_name}
                         </td>
                         <td>{user.email}</td>
+                        <td>
+                          {" "}
+                          <Link
+                            to={`/user/${user.user_name}`}
+                            style={{ textDecoration: "none" }}
+                          >
+                            {user.user_name}
+                          </Link>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -77,8 +77,9 @@ const Navigation = () => {
             </NavDropdown>
           </Nav>
           {user && (
+            
             <NavDropdown title={user.first_name} id="profile-dropdown">
-              <NavDropdown.Item as={Link} to="/user/edit">
+              <NavDropdown.Item as={Link} to={`/user/${user.user_name}`}>
                 Meu Perfil
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/profile">
