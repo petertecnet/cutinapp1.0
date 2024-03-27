@@ -88,7 +88,12 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
+            $username = Str::slug($request->input('first_name')) . '-' . Str::random(4);
 
+            // Check if the generated username is unique, if not, generate a new one
+            while (User::where('user_name', $username)->exists()) {
+                $username = Str::slug($request->input('first_name')) . '-' . Str::random(4);
+            }
             // Geração do código de verificação
             $verificationCode = Str::random(4);
 
@@ -97,6 +102,7 @@ class AuthController extends Controller
                 'first_name' => $request->input('first_name'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
+                'user_name' => $username,
                 'verification_code' => $verificationCode,
             ]);
 
