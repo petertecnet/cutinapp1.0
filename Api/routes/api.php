@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AuthController, UserController, ProfileController};
+use App\Http\Controllers\{AuthController, UserController, ProfileController, ProductionController};
 
 Route::group([
     'middleware' => 'api',
@@ -42,3 +42,17 @@ Route::group([
     Route::put('/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'production'
+], function ($router) {
+    Route::post('/', [ProductionController::class, 'store'])->name('production.store');
+    Route::get('/', [ProductionController::class, 'list'])->name('production.list');
+    Route::get('/{id}', [ProductionController::class, 'show'])->name('production.show'); // Rota para mostrar os detalhes de uma produção específica
+    Route::post('/{id}', [ProductionController::class, 'update'])->name('production.update');
+    Route::delete('/{id}', [ProductionController::class, 'delete'])->name('production.delete'); // Rota para excluir uma produção
+    Route::get('/view/{slug}', [ProductionController::class, 'view'])->name('production.view'); // Rota para visualizar uma produção por slug
+    // Adicione outras rotas de produção conforme necessário
+});
+

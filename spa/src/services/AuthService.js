@@ -126,7 +126,7 @@ const authService = {
   },
   me: async () => {
     const token = authService.getToken();
-
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     // Se não houver token, lançamos um erro
     if (!token) {
       throw new Error("Usuário não autenticado.");
@@ -140,7 +140,7 @@ const authService = {
       const response = await axios.get(`${apiBaseUrl}/${apiServiceUrl}/me`, {
         headers,
       });
-
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       return response.data; // Retorna o objeto do usuário se estiver autenticado
     } catch (error) {
       console.error(error);

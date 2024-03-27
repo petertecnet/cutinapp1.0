@@ -1,6 +1,6 @@
 // config.js
 
-const apiBaseUrl = "http://localhost/cutinapp1.0/Api/public/api";
-const storageUrl = "http://localhost/cutinapp1.0/Api/storage/app/public";
+const apiBaseUrl = "http://192.168.1.6/cutinapp1.0/Api/public/api";
+const storageUrl = "http://192.168.1.6/cutinapp1.0/Api/storage/app/public";
 
 export { apiBaseUrl, storageUrl };

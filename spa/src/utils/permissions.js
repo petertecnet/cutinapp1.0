@@ -184,7 +184,48 @@ const permissions = {
         'category': 'Relátório',
         'name': 'Visualizar relatórios',
         'description': 'Permite ao usuário visualizar relatórios e estatísticas.',
-    }
+    },
+    'production_scan': {
+        'permission': 'production_scan',
+        'category': 'Produção',
+        'name': 'Scanear produção',
+        'description': 'Permite ao usuário scanear as produções.',
+    },
+    'production_validate': {
+        'permission': 'production_validate',
+        'category': 'Produção',
+        'name': 'Validar produção',
+        'description': 'Permite ao usuário validar as produções.',
+    },
+    'production_list': {
+        'permission': 'production_list',
+        'category': 'Produção',
+        'name': 'Listar produções',
+        'description': 'Permite ao usuário listar produções.',
+    },
+    'production_configure': {
+        'permission': 'production_configure',
+        'category': 'Produção',
+        'name': 'Configurar produção',
+        'description': 'Permite ao usuário configurar produções.',
+    },
+    'production_create': {
+        'permission': 'production_create',
+        'category': 'Produção',
+        'name': 'Criar produção',
+        'description': 'Permite ao usuário criar produções.',
+    },
+    'production_update': {
+        'permission': 'production_update',
+        'category': 'Produção',
+        'name': 'Atualizar produção',
+        'description': 'Permite ao usuário atualizar as produções.',
+    }, 'production_delete': {
+        'permission': 'production_delete',
+        'category': 'Produção',
+        'name': 'Excluir produção',
+        'description': 'Permite ao usuário excluir as produções.',
+    },
 };
 
 export default permissions;
