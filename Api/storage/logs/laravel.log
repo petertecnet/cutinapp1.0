@@ -1,8 +1,0 @@
-[2024-03-27 07:25:56] local.ERROR: Erro ao mostrar o perfil do usuário: Call to undefined relationship [productions] on model [App\Models\User].  
-[2024-03-27 08:06:13] local.ERROR: Usuário não autenticado.  
-[2024-03-27 08:06:57] local.ERROR: Usuário não autenticado.  
-[2024-03-27 08:07:43] local.ERROR: Usuário não autenticado.  
-[2024-03-27 08:07:50] local.ERROR: Usuário não autenticado.  
-[2024-03-27 08:07:55] local.ERROR: Usuário não autenticado.  
-[2024-03-27 08:08:52] local.ERROR: Usuário não autenticado.  
-[2024-03-27 08:12:24] local.INFO: Usuário atualizado com sucesso: 1  
