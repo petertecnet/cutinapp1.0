@@ -141,3 +141,26 @@ body {
  margin: 15px;
  border: 3px solid rgb(10, 14, 255);
 }
+
+.card-user{
+  
+  background-color: rgba(7, 54, 73);
+ color: rgb(199, 232, 241);
+ padding: 50px;  
+ backdrop-filter: blur(1px);
+ font-size:15px;
+ border-radius: 30px;
+ margin: 15px;
+ border: 3px solid rgb(255, 255, 255);
+}
+.card-user:hover{
+  
+  background-color: rgba(1, 5, 15);
+ color: rgb(255, 255, 255);
+ padding: 50px;  
+ backdrop-filter: blur(1px);
+ font-size:15px;
+ border-radius: 30px;
+ margin: 15px;
+ border: 3px solid rgb(255, 255, 255);
+}

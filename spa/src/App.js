@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+//Auth
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EmailVerifyPage from "./pages/EmailVerifyPage";
@@ -13,22 +14,33 @@ import PasswordEmailPage from "./pages/PasswordEmailPage";
 import PasswordPage from "./pages/PasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 
-import UserEditPage from "./pages/UserEditPage";
+
+
+// Administrativo
+// User
 import UserListPage from "./pages/admin/user/UserListPage";
 import UserCreatePage from "./pages/admin/user/UserCreatePage";
-
+// Profile
 import ProfileCreatePage from "./pages/admin/profile/ProfileCreatePage";
 import ProfileListPage from "./pages/admin/profile/ProfileListPage";
 import ProfileUpdatePage from "./pages/admin/profile/ProfileUpdatePage";
-
-
+// Production
 import ProductionListAdminPage from "./pages/admin/production/ProductionListAdminPage";
 
+// Corporativo
+import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
 
+//Participativo
+//Production
 import ProductionCreatePage from "./pages/production/ProductionCreatePage";
 import ProductionListPage from "./pages/production/ProductionPage";
-import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
 import ProductionViewPage  from "./pages/production/ProductionViewPage";
+
+
+//User
+import UserViewPage  from "./pages/user/UserViewPage";
+import UserEditPage from "./pages/UserEditPage";
+
 
 
 import LoadingComponent from "./components/LoadingComponent";
@@ -103,8 +115,9 @@ const App = () => {
         
         <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
         <Route path="/user/list" element={protectedRoute(<UserListPage />)} />
-        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} />
-        <Route path="/user/show" element={protectedRoute(<UserCreatePage />)} />
+        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} /> 
+        <Route path="/user/:userName" element={protectedRoute(<UserViewPage />)}/>
+
 
         <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />
