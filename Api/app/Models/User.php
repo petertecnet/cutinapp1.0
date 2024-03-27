@@ -20,7 +20,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
+        'user_name',
         'first_name',
+        'user_name',
         'last_name',
         'email',
         'verification_code',
@@ -97,6 +99,11 @@ class User extends Authenticatable implements JWTSubject
 {
     return $this->belongsTo(Profile::class);
 }
+
+public function productions()
+    {
+        return $this->hasMany(Production::class);
+    }
 public function hasProfile($profileName)
 {
     return $this->profile && $this->profile->name === $profileName;
