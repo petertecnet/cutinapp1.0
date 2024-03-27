@@ -13,18 +13,26 @@ import PasswordEmailPage from "./pages/PasswordEmailPage";
 import PasswordPage from "./pages/PasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 
-import UserEditPage from "./pages/user/UserEditPage";
-import UserListPage from "./pages/user/UserListPage";
-import UserCreatePage from "./pages/user/UserCreatePage";
+import UserEditPage from "./pages/UserEditPage";
+import UserListPage from "./pages/admin/user/UserListPage";
+import UserCreatePage from "./pages/admin/user/UserCreatePage";
 
-import ProfileCreatePage from "./pages/profile/ProfileCreatePage";
-import ProfileListPage from "./pages/profile/ProfileListPage";
-import ProfileUpdatePage from "./pages/profile/ProfileUpdatePage";
+import ProfileCreatePage from "./pages/admin/profile/ProfileCreatePage";
+import ProfileListPage from "./pages/admin/profile/ProfileListPage";
+import ProfileUpdatePage from "./pages/admin/profile/ProfileUpdatePage";
+
+
+import ProductionListAdminPage from "./pages/admin/production/ProductionListAdminPage";
+
+
+import ProductionCreatePage from "./pages/production/ProductionCreatePage";
+import ProductionListPage from "./pages/production/ProductionPage";
+import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
+import ProductionViewPage  from "./pages/production/ProductionViewPage";
 
 
 import LoadingComponent from "./components/LoadingComponent";
 import authService from "./services/AuthService";
-import './css/card.css'; 
 
 
 const App = () => {
@@ -99,9 +107,19 @@ const App = () => {
 
         <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />
-        <Route path="/profile/update/:id" element={protectedRoute(<ProfileUpdatePage />)}
-/>
+        <Route path="/profile/update/:id" element={protectedRoute(<ProfileUpdatePage />)}/>
+        
+        <Route path="/production/list" element={protectedRoute(<ProductionListAdminPage />)} />
        
+
+        <Route path="/production/create" element={protectedRoute(<ProductionCreatePage />)} />
+        <Route path="/productions" element={protectedRoute(<ProductionListPage />)} /> 
+        <Route path="/production/update/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
+        <Route path="/production/show/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
+        <Route path="/production/view/:slug" element={protectedRoute(<ProductionViewPage />)}/>
+      
+       
+
       </Routes>
     </Router>
   );

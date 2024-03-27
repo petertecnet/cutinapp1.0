@@ -1,33 +1,37 @@
 import React, { Component } from "react";
 import authService from "../services/AuthService";
-import Alert from "react-bootstrap/Alert";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Form,
+  Alert,
+} from "react-bootstrap"; // Adicionando o componente Alert
 
 class RegisterPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "",
-      userEmail: "",
+      first_name: "",
+      email: "",
       password: "",
       confirmPassword: "",
       showAlert: false,
       alertType: "success",
       alertMessage: "",
+      loading: false,
       timerId: null, // Adicione o ID do temporizador ao estado
     };
   }
 
-  onChangeFirstName = (e) => {
-    this.setState({ firstName: e.target.value });
+  onChangefirst_name = (e) => {
+    this.setState({ first_name: e.target.value });
   };
 
-  onChangeUserEmail = (e) => {
-    this.setState({ userEmail: e.target.value });
+  onChangeemail = (e) => {
+    this.setState({ email: e.target.value });
   };
 
   onChangePassword = (e) => {
@@ -41,14 +45,18 @@ class RegisterPage extends Component {
   onSubmit = async (e) => {
     e.preventDefault();
 
-    const { firstName, userEmail, password } = this.state;
+    const { first_name, email, password } = this.state;
+
+    this.setState({ loading: true });
 
     try {
-      const registrationResponse = await authService.register({
-        first_name: firstName,
-        email: userEmail,
+      const userObject = {
+        first_name: first_name,
+        email: email,
         password: password,
-      });
+      };
+
+      const registrationResponse = await authService.register(userObject);
 
       const modalMessage =
         registrationResponse?.data?.message || "Registro bem-sucedido";
@@ -57,6 +65,7 @@ class RegisterPage extends Component {
         showAlert: true,
         alertMessage: modalMessage,
         alertType: "success",
+        loading: false,
       });
 
       // Iniciar temporizador para ocultar o alerta após 5 segundos
@@ -67,34 +76,34 @@ class RegisterPage extends Component {
       // Salvar o ID do temporizador no estado
       this.setState({ timerId: timerId });
     } catch (error) {
-      let modalMessage = "Erro durante o registro. Por favor, tente novamente.";
-      let errorMessages = [];
+      console.log(error);
+      let errorMessages = "";
 
       if (error.email || error.first_name || error.password) {
         if (error.email) {
-          errorMessages.push(error.email[0]);
+          errorMessages += error.email[0];
         }
         if (error.first_name) {
-          errorMessages.push(error.first_name[0]);
+          errorMessages += error.first_name[0];
         }
         if (error.password) {
-          errorMessages.push(error.password[0]);
+          errorMessages += error.password[0];
         }
-
-        if (errorMessages.length > 0) {
-          modalMessage = errorMessages.join("<br>");
-        }
+      } else {
+        errorMessages = "Erro desconhecido ao tentar se registrar.";
       }
 
       this.setState({
         showAlert: true,
-        alertMessage: modalMessage,
+        alertMessage: errorMessages,
         alertType: "danger",
+        loading: false,
       });
     }
   };
 
   render() {
+    const { loading } = this.state;
     return (
       <Container>
         <Row className="justify-content-md-center mt-5">
@@ -107,33 +116,32 @@ class RegisterPage extends Component {
                   <img
                     src="/images/loadingimage.gif"
                     alt="Logo"
-                    className="logo rounded-circle img-thumbnail"
+                    className="logo rounded-circle img-thumnail"
                     style={{ width: "150px", height: "150px" }}
                   />
                 </div>
 
-                <Card.Title>Cadastrar-se</Card.Title>
+                <Card.Title className="text-center m-2 h2">
+                  REGISTRE-SE
+                </Card.Title>
                 <Form onSubmit={this.onSubmit}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Nome</Form.Label>
+                  <Form.Group className="m-3">
                     <Form.Control
                       type="text"
                       placeholder="Nome"
-                      onChange={this.onChangeFirstName}
-                      value={this.state.firstName}
+                      onChange={this.onChangefirst_name}
+                      value={this.state.first_name}
                     />
                   </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
+                  <Form.Group className="m-3">
                     <Form.Control
                       type="email"
                       placeholder="Insira o Email"
-                      onChange={this.onChangeUserEmail}
-                      value={this.state.userEmail}
+                      onChange={this.onChangeemail}
+                      value={this.state.email}
                     />
                   </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Senha</Form.Label>
+                  <Form.Group className="m-3">
                     <Form.Control
                       type="password"
                       placeholder="Insira a Senha"
@@ -141,8 +149,7 @@ class RegisterPage extends Component {
                       value={this.state.password}
                     />
                   </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Confirmar Senha</Form.Label>
+                  <Form.Group className="m-3">
                     <Form.Control
                       type="password"
                       placeholder="Confirme a Senha"
@@ -150,9 +157,9 @@ class RegisterPage extends Component {
                       value={this.state.confirmPassword}
                     />
                   </Form.Group>
-                  <button type="submit" className="btn btn-primary">
-                    Cadastrar
-                  </button>
+                  <Button variant="primary" type="submit" disabled={loading}>
+                    {loading ? "Registrando..." : "Registrar"}
+                  </Button>
                   <p className="forgot-password text-right">
                     Já está registrado? <a href="/login">Entrar</a>
                   </p>
@@ -169,12 +176,14 @@ class RegisterPage extends Component {
                     this.setState({ showAlert: false });
                   }}
                   dismissible
+                  style={{
+                    position: "fixed",
+                    top: "10px",
+                    right: "10px",
+                    zIndex: "1050",
+                  }}
                 >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: this.state.alertMessage,
-                    }}
-                  />
+                  {this.state.alertMessage}
                 </Alert>
               </Card.Body>
             </Card>
