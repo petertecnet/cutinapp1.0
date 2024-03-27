@@ -83,7 +83,7 @@ const EmailVerifyPage = () => {
       <Container>
         <Row className="justify-content-center mt-5">
           <Col md={6} className="mt-5">
-            <Card className="text-white bg-black text-center">
+            <Card>
               <Card.Body>
                 <div className="text-center">
                   {" "}
@@ -114,25 +114,37 @@ const EmailVerifyPage = () => {
                   </Form.Group>
                   <div className="d-grid">
                     <Button type="submit" variant="primary">
-                      Verificar Email
+                    {loading ? "Verificando..." : "Verificar email"}
                     </Button>
                   </div>
                 </Form>
                 <div className="text-center mt-3">
                   <Button
-                    variant="outline-primary"
+                    variant="secondary"
                     onClick={handleResendVerificationCode}
                     disabled={loading}
                   >
-                    Reenviar Código de Verificação
+                    
+                    {loading ? "Enviando..." : "Reenviar Código de Verificação"}
                   </Button>
                 </div>
-                {showAlertState && (
+                
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        {showAlertState && (
                   <Alert
                     show={showAlertState}
                     variant={alertType}
                     onClose={() => setShowAlertState(false)}
                     dismissible
+                    style={{
+                      position: "fixed",
+                      bottom: "550px",
+                      right: "30px",
+                      zIndex: "1000",
+                    }}
                   >
                     <Alert.Heading>
                       {alertType === "success" ? "Sucesso" : "Erro"}
@@ -140,10 +152,6 @@ const EmailVerifyPage = () => {
                     <p>{alertMessage}</p>
                   </Alert>
                 )}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
       </Container>
       {loading && <LoadingComponent />}{" "}
       {/* Renderiza o componente de carregamento enquanto verifica o e-mail */}

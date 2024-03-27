@@ -35,7 +35,7 @@ class WelcomeMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Bem-vindo ao nosso sistema')
+        return $this->subject('Bem-vindo à Cutinapp')
                     ->markdown('emails.welcome')
                     ->with([
                         'verificationCode' => $this->verificationCode,

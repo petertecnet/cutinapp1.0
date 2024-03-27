@@ -102,8 +102,6 @@ class PasswordEmailPage extends Component {
             <Card>
               <Card.Body>
                 <div className="text-center">
-                  {" "}
-                  {/* Div para centralizar o conteúdo */}
                   <img
                     src="/images/loadingimage.gif"
                     alt="Logo"
@@ -114,7 +112,7 @@ class PasswordEmailPage extends Component {
 
                 {!this.state.showPasswordResetForm ? (
                   <Form onSubmit={this.onSubmitEmail}>
-                    <Card.Title>Recuperar senha</Card.Title>
+                    <Card.Title className="text-center">Recuperar senha</Card.Title>
                     <Form.Group className="m-3">
                       <Form.Control
                         type="email"

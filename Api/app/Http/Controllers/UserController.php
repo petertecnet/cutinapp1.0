@@ -18,11 +18,11 @@ class UserController extends Controller
     protected function getValidationMessages()
     {
         return [
-            'first_name.required' => 'O campo :attribute é obrigatório.', 
+            'first_name.required' => 'O campo :attribute é obrigatório.',
             'email.required' => 'O campo e-mail é obrigatório.',
             'email.email' => 'O e-mail deve ser um endereço de e-mail válido.',
             'email.unique' => 'Este e-mail já está sendo utilizado por outro usuário.',
-        
+
             'avatar.image' => 'O arquivo deve ser uma imagem.',
             'avatar.mimes' => 'O arquivo deve ter um formato de imagem válido (jpeg, png, jpg, gif).',
             'avatar.max' => 'O tamanho máximo do arquivo é de 2MB.',
@@ -268,6 +268,61 @@ class UserController extends Controller
             return response()->json(['error' => 'Ocorreu um erro ao cadastrar o novo usuário.'], 500);
         }
     }
-   
+
+    public function list()
+    {
+        try {
+            // Verificar se o usuário está autenticado
+            $user = Auth::user();
+            if (!$user) {
+                Log::error('Usuário não autenticado.');
+                return response()->json(['error' => 'Usuário não autenticado.'], 401);
+            }
+
+            // Verificar se o usuário tem permissão para listar usuários
+            if (!$user->hasPermission('user_list')) {
+                Log::error('Usuário não tem permissão para listar usuários.');
+                return response()->json(['error' => 'Você não tem permissão para listar usuários.'], 403);
+            }
+
+            // Buscar todos os usuários
+            $users = User::all();
+
+            // Retornar os usuários encontrados
+            return response()->json(['users' => $users], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao listar usuários: ' . $e->getMessage());
+            return response()->json(['error' => 'Ocorreu um erro ao listar usuários.'], 500);
+        }
+    }
+    public function show($id)
+    {
+        try {
+            // Verificar se o usuário está autenticado
+            $user = Auth::user();
+            if (!$user) {
+                Log::error('Usuário não autenticado.');
+                return response()->json(['error' => 'Usuário não autenticado.'], 401);
+            }
+
+            // Verificar se o usuário tem permissão para visualizar o perfil do usuário
+            if (!$user->hasPermission('user_show')) {
+                Log::error('Usuário não tem permissão para visualizar este perfil de usuário.');
+                return response()->json(['error' => 'Você não tem permissão para visualizar este perfil de usuário.'], 403);
+            }
+
+            // Buscar o usuário pelo ID
+            $userToShow = User::findOrFail($id);
+
+            // Retornar os dados do usuário
+            return response()->json(['user' => $userToShow], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao mostrar o perfil do usuário: ' . $e->getMessage());
+            return response()->json(['error' => 'Ocorreu um erro ao mostrar o perfil do usuário.'], 500);
+        }
+    }
+
 }
 

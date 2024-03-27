@@ -63,11 +63,10 @@ class LoginPage extends Component {
                     style={{ width: "150px", height: "150px" }}
                   />
                 </div>
-                <Card.Title>Entrar</Card.Title>
+                <Card.Title className="text-center m-4">LOGIN</Card.Title>
                 <Card.Text>
                   <Form onSubmit={this.onSubmit}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Email</Form.Label>
                       <Form.Control
                         type="email"
                         placeholder="Insira o email"
@@ -77,7 +76,6 @@ class LoginPage extends Component {
                       />
                     </Form.Group>
                     <Form.Group className="mb-3">
-                      <Form.Label>Senha</Form.Label>
                       <Form.Control
                         type="password"
                         placeholder="Insira a senha"
