@@ -96,6 +96,7 @@ const App = () => {
         <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
         <Route path="/user/list" element={protectedRoute(<UserListPage />)} />
         <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} />
+        <Route path="/user/show" element={protectedRoute(<UserCreatePage />)} />
 
         <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />
