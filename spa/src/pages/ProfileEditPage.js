@@ -168,7 +168,7 @@ const ProfileEditPage = () => {
           <Col md={4} >
             <Card>
               <Card.Body>
-                <h2 className="text-center mb-4">Informações básicas</h2>
+                <p className="text-center text-info">{user.user_name}</p>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Alert
                   show={showAlert}
