@@ -5,6 +5,20 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+<<<<<<< HEAD
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+<<<<<<< HEAD
+import DashboardPage from "./pages/DashboardPage";
+import UserEditPage from "./pages/user/UserEditPage";
+import ProfileCreatePage from "./pages/profile/ProfileCreatePage";
+=======
+>>>>>>> main
+import EmailVerifyPage from "./pages/EmailVerifyPage";
+import LogoutPage from "./pages/LogoutPage";
+import PasswordEmailPage from "./pages/PasswordEmailPage";
+import PasswordPage from "./pages/PasswordPage";
+=======
 //Auth
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -12,6 +26,7 @@ import EmailVerifyPage from "./pages/auth/EmailVerifyPage";
 import LogoutPage from "./pages/auth/LogoutPage";
 import PasswordEmailPage from "./pages/auth/PasswordEmailPage";
 import PasswordPage from "./pages/auth/PasswordPage";
+>>>>>>> main
 import DashboardPage from "./pages/DashboardPage";
 
 
@@ -106,8 +121,23 @@ const App = () => {
       <Routes>
         <Route path="/register" element={restrictedRoute(<RegisterPage />)} />
         <Route path="/login" element={restrictedRoute(<LoginPage />)} />
+<<<<<<< HEAD
+        <Route
+          path="/password-email"
+          element={restrictedRoute(<PasswordEmailPage />)}
+        />
+        <Route
+          path="/email-verify"
+          element={emailVerifiedRoute(<EmailVerifyPage />)}
+        />
+        <Route path="/dashboard" element={protectedRoute(<DashboardPage />)} />
+        <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
+        <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
+        <Route path="/settings" element={protectedRoute(<SettingsPage />)} />
+=======
         <Route path="/password-email" element={restrictedRoute(<PasswordEmailPage />)}/>
         <Route path="/email-verify" element={emailVerifiedRoute(<EmailVerifyPage />)}/>
+>>>>>>> main
         <Route path="/password" element={protectedRoute(<PasswordPage />)} />
         <Route path="/logout" element={(<LogoutPage />)}/>
         <Route path="/*" element={<Navigate to="/login" />} />

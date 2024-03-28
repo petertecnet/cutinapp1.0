@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
+<<<<<<< HEAD:spa/src/pages/profile/ProfileCreatePage.js
+import profileService from "../../services/ProfileService";
+import permissions from "../../utils/permissions";
+<<<<<<< HEAD
+=======
+import { Link } from "react-router-dom";
+>>>>>>> main
+import NavlogComponent from "../../components/NavlogComponent";
+=======
 import profileService from "../../../services/ProfileService";
 import permissions from "../../../utils/permissions";
 import { Link } from "react-router-dom";
 import NavlogComponent from "../../../components/NavlogComponent";
+>>>>>>> main:spa/src/pages/admin/profile/ProfileCreatePage.js
 
 const ProfileCreatePage = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +23,11 @@ const ProfileCreatePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [apiMessage, setApiMessage] = useState(null);
+<<<<<<< HEAD
+=======
   const [showSuccessAlert, setShowSuccessAlert] = useState(false); // Estado para controlar a exibição do alerta de sucesso
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+>>>>>>> main
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +104,16 @@ const ProfileCreatePage = () => {
         name: formData.name,
         permissions: formData.selectedPermissions,
       });
+<<<<<<< HEAD
+  
+      // Verifica se a resposta da API possui uma mensagem
+      if (response && response.message) {
+        setApiMessage(response.message); // Define a mensagem da API para o alerta
+      }
+    } catch (error) {
+      console.error("Erro ao criar perfil:", error);
+      setError("Erro ao criar perfil. Verifique os dados e tente novamente.");
+=======
       console.logo(response);
       // Verifica se a resposta da API possui uma mensagem
       setApiMessage(response.data.message);
@@ -102,6 +125,7 @@ const ProfileCreatePage = () => {
       setShowErrorAlert(true); // Exibir o alerta de erro após a falha na exclusão
       setTimeout(() => setShowErrorAlert(false), 5000); // Ocultar o alerta após 5 segundos
  
+>>>>>>> main
     } finally {
       setLoading(false);
     }
@@ -208,7 +232,11 @@ const ProfileCreatePage = () => {
         <Button
           variant="info"
           onClick={handleSelectAllCategories}
+<<<<<<< HEAD
+          style={{ position: "fixed", bottom: "150px", right: "20px", zIndex: "1000" }}
+=======
           style={{ position: "fixed", bottom: "150px", right: "10px", zIndex: "1000" }}
+>>>>>>> main
         >
           Selecionar Todos
         </Button>
@@ -216,11 +244,33 @@ const ProfileCreatePage = () => {
         <Button
           variant="danger"
           onClick={handleClearAllCategories}
+<<<<<<< HEAD
+          style={{ position: "fixed", bottom: "100px", right: "20px", zIndex: "1000" }}
+=======
           style={{ position: "fixed", bottom: "100px", right: "10px", zIndex: "1000" }}
+>>>>>>> main
         >
           Limpar Seleção
         </Button>
       
+<<<<<<< HEAD
+        {/* Alerta para exibir a mensagem da API */}
+        {apiMessage && (
+          <Alert
+            variant="success"
+            onClose={() => setApiMessage(null)}
+            dismissible
+            style={{
+              position: "fixed",
+              top: "10px",
+              right: "10px",
+              zIndex: "1000",
+            }}
+          >
+            {apiMessage}
+          </Alert>
+        )}
+=======
         <Link to="/profile/list">
           <Button
             variant="secondary"
@@ -241,6 +291,7 @@ const ProfileCreatePage = () => {
          <Alert variant="danger" show={showErrorAlert} onClose={() => setShowErrorAlert(false)} dismissible style={{ position: "fixed", top: "10px", right: "10px", zIndex: "1050" }}>
          {apiMessage}
       </Alert>
+>>>>>>> main
       </>
     );
   };
