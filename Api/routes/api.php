@@ -36,15 +36,10 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'profile'
 ], function ($router) {
-<<<<<<< HEAD
-    Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/{id}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/', [ProfileController::class, 'store'])->name('profile.store'); // Adicionando a rota para o método store
-=======
+
     Route::get('/', [ProfileController::class, 'list'])->name('profile.list');
     Route::get('/{id}', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/', [ProfileController::class, 'store'])->name('profile.store');
->>>>>>> main
-    Route::put('/{id}', [ProfileController::class, 'update'])->name('profile.update');
+Route::put('/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
