@@ -77,7 +77,10 @@ const ProductionListAdminPage = () => {
                     {productions.map((production) => (
                       <tr key={production.id}>
                         <td className="text-center">
-                          <img
+                        <Link
+                              to={`/production/view/${production.slug}`}
+                              style={{ textDecoration: "none", color: "white" }}
+                            ><img
                             src={
                               production.logo
                                 ? `${storageUrl}/${production.logo}`
@@ -86,10 +89,25 @@ const ProductionListAdminPage = () => {
                             alt="User Avatar"
                             className="avatar "
                             style={{ maxWidth: "50px", borderRadius: "50%" }}
-                          />
+                          /></Link>
                         </td>
-                        <td>{production.name}</td>
-                        <td>{production.owner}</td>
+                        <td>  <Link
+                              to={`/production/view/${production.slug}`}
+                              style={{ textDecoration: "none", color: "white" }}
+                            >{production.name}</Link></td>
+                        <td>    <Link
+                    to={`/production/view/${production.slug}`}
+                    style={{ textDecoration: "none", color: "white" }}
+                  >   {production.user.avatar && (
+                 
+                  <img
+                        src={`${storageUrl}/${production.user.avatar}`}
+                        alt={`${production.user.first_name} Produtor da produção ${production.name} da Logo`}
+                        className="rounded-circle m-2"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+
+                    )}{production.user.first_name}</Link> </td>
                         <td>
                           <Button variant="info" size="sm" className="m-1">
                             <Link

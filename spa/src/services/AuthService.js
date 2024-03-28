@@ -126,7 +126,7 @@ const authService = {
   },
   me: async () => {
     const token = authService.getToken();
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     // Se não houver token, lançamos um erro
     if (!token) {
       throw new Error("Usuário não autenticado.");
@@ -155,13 +155,12 @@ const authService = {
       );
 
       if (response.status === 200) {
-        return true; // Envio de e-mail de redefinição de senha bem-sucedido
+        console.log(response.data)
+        return response.data; // Envio de e-mail de redefinição de senha bem-sucedido
       }
     } catch (error) {
       console.error(error);
-      throw new Error(
-        "Erro ao enviar e-mail de redefinição de senha. Por favor, tente novamente."
-      );
+      throw error.response.data;
     }
   },
   passwordReset: async (email, resetCode, newPassword, confirmPassword) => {

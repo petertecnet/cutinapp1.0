@@ -1,61 +1,44 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Alert,
-} from "react-bootstrap";
-import authService from "../../services/AuthService";
-import userService from "../../services/UserService";
+import { useParams } from "react-router-dom";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import NavlogComponent from "../../components/NavlogComponent";
+import userService from "../../services/UserService";
 import LoadingComponent from "../../components/LoadingComponent";
 import { storageUrl } from "../../config";
 
 const UserViewPage = () => {
+  const { userName } = useParams();
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState("");
-  const [timerId, setTimerId] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUser = async () => {
       try {
-        const userData = await authService.me();
-        setUser(userData);
+        if (!userName) {
+          throw new Error("Nome de usuário não fornecido.");
+        }
+
+        const response = await userService.view(userName);
+        setUser(response.user);
         setLoading(false);
       } catch (error) {
-        console.error(error);
-        setError(
-          "Erro ao carregar os dados do usuário. Por favor, tente novamente."
-        );
+        console.error("Erro ao buscar usuário:", error);
         setLoading(false);
       }
     };
 
-    fetchUserData();
-  }, []);
+    fetchUser();
+  }, [userName]);
 
-  const showAlertWithTimer = (type, message) => {
-    setShowAlert(true);
-    setAlertMessage(message);
-    setAlertType(type);
-
-    // Limpar o temporizador atual, se existir
-    if (timerId) {
-      clearTimeout(timerId);
+  const calculateAge = (birthdate) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
     }
-
-    // Definir um novo temporizador para ocultar o alerta após 3 segundos
-    const id = setTimeout(() => {
-      setShowAlert(false);
-    }, 3000);
-
-    // Atualizar o estado com o ID do temporizador
-    setTimerId(id);
+    return age;
   };
 
   if (loading) {
@@ -65,56 +48,75 @@ const UserViewPage = () => {
   return (
     <>
       <NavlogComponent />
-      <Container fluid>
-        <Row className="justify-content-center mt-4">
-          <Col md={8}>
-            <Card>
-              <Card.Body>
-                {error && <Alert variant="danger">{error}</Alert>}
-                <Alert
-                  show={showAlert}
-                  variant={alertType}
-                  onClose={() => {
-                    setShowAlert(false);
-                    clearTimeout(timerId); // Limpar temporizador ao fechar manualmente
-                  }}
-                  dismissible
-                >
-                  {alertMessage}
-                </Alert>
-
-                <div className="text-center mt-4">
-                  <img
-                    src={
-                      user.avatar.startsWith("http")
-                        ? user.avatar
-                        : `${storageUrl}/${user.avatar}`
-                    }
-                    alt="Avatar"
-                    className="avatar"
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                </div>
-                <h3 className="text-center mt-4">
-                  {`${user.first_name} ${user.last_name}`}
-                </h3>
-                <p className="text-center">
-                  {`${user.city}, ${user.uf}`}
-                </p>
-                <p className="text-center">{`Telefone: ${user.phone}`}</p>
-                <p className="text-center">{`CPF: ${user.cpf}`}</p>
-                <p className="text-center">{`Data de Nascimento: ${user.birthdate}`}</p>
-                <p className="text-center">{`Gênero: ${user.gender}`}</p>
-                <p className="text-center">{`Ocupação: ${user.occupation}`}</p>
-                <p className="text-center">{`Sobre: ${user.about}`}</p>
-                <p className="text-center">{`Artista Favorito: ${user.favorite_artist}`}</p>
-                <p className="text-center">{`Gênero Favorito: ${user.favorite_genre}`}</p>
-              </Card.Body>
-            </Card>
+      <Container>
+        <Row>
+          <Col md={12}>
+            <Row>
+             
+              <Col md={7} >
+                <Card className="card-user">
+                  <Card.Body>
+                    {user && (
+                      <>
+                        <Card.Text>
+                          <p className=" h6 text-center">
+                            <strong> {user.about} </strong>
+                          </p>{" "}
+                          <br />
+                          <strong>Artista Favorito:</strong>{" "}
+                          {user.favorite_artist} <br />
+                          <strong>Gênero Favorito:</strong>{" "}
+                          {user.favorite_genre} <br />
+                        </Card.Text>
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={5}>
+                <Card className="card-user">
+                  <Card.Body>
+                    {user && (
+                      <>
+                        <Card.Text className="mb-2">
+                          <div className="text-center">
+                            <img
+                              src={
+                                user.avatar
+                                  ? `${storageUrl}/${user.avatar}`
+                                  : "/images/loadingimage.gif"
+                              }
+                              alt={`${user.first_name} ${
+                                user.last_name ? user.last_name : ""
+                              }`}
+                              className="rounded-circle "
+                              
+                            style={{ maxWidth: "250px", borderRadius: "250%" }}
+                             
+                            />
+                          </div>
+                          <br />
+                          <strong>Nome:</strong> {user.first_name} {user.last_name} <br />
+                       
+                          <strong>Email:</strong> {user.email} <br />
+                       
+                          <strong>CPF:</strong> {user.cpf} <br />
+                          <strong>Endereço:</strong> {user.address} <br />
+                          <strong>Telefone:</strong> {user.phone} <br />
+                          <strong>Cidade:</strong> {user.city} <br />
+                          <strong>UF:</strong> {user.uf} <br />
+                          <strong>Idade:</strong> {calculateAge(user.birthdate)} anos <br />
+                          <strong>Gênero:</strong> {user.gender} <br />
+                          <strong>Estado Civil:</strong> {user.marital_status}{" "}
+                          <br />
+                          <strong>Profissão:</strong> {user.occupation} <br />
+                        </Card.Text>
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

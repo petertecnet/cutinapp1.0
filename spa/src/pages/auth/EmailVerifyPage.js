@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
-import authService from "../services/AuthService";
-import Navlog from "../components/NavlogComponent";
+import authService from "../../services/AuthService";
+import Navlog from "../../components/NavlogComponent";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
@@ -9,7 +9,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import LoadingComponent from "../components/LoadingComponent";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const EmailVerifyPage = () => {
   const [verificationCode, setVerificationCode] = useState("");

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import authService from "../services/AuthService";
+import authService from "../../services/AuthService";
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";

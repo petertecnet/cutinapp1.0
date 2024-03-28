@@ -5,30 +5,42 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import EmailVerifyPage from "./pages/EmailVerifyPage";
-import LogoutPage from "./pages/LogoutPage";
-import PasswordEmailPage from "./pages/PasswordEmailPage";
-import PasswordPage from "./pages/PasswordPage";
+//Auth
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import EmailVerifyPage from "./pages/auth/EmailVerifyPage";
+import LogoutPage from "./pages/auth/LogoutPage";
+import PasswordEmailPage from "./pages/auth/PasswordEmailPage";
+import PasswordPage from "./pages/auth/PasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 
-import UserEditPage from "./pages/UserEditPage";
+
+
+// Administrativo
+// User
 import UserListPage from "./pages/admin/user/UserListPage";
 import UserCreatePage from "./pages/admin/user/UserCreatePage";
-
+// Profile
 import ProfileCreatePage from "./pages/admin/profile/ProfileCreatePage";
 import ProfileListPage from "./pages/admin/profile/ProfileListPage";
 import ProfileUpdatePage from "./pages/admin/profile/ProfileUpdatePage";
-
-
+// Production
 import ProductionListAdminPage from "./pages/admin/production/ProductionListAdminPage";
 
+// Corporativo
+import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
 
+//Participativo
+//Production
 import ProductionCreatePage from "./pages/production/ProductionCreatePage";
 import ProductionListPage from "./pages/production/ProductionPage";
-import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
 import ProductionViewPage  from "./pages/production/ProductionViewPage";
+
+
+//User
+import UserViewPage  from "./pages/user/UserViewPage";
+import UserEditPage from "./pages/user/UserEditPage";
+
 
 
 import LoadingComponent from "./components/LoadingComponent";
@@ -90,6 +102,7 @@ const App = () => {
 
   return (
     <Router>
+      
       <Routes>
         <Route path="/register" element={restrictedRoute(<RegisterPage />)} />
         <Route path="/login" element={restrictedRoute(<LoginPage />)} />
@@ -103,8 +116,9 @@ const App = () => {
         
         <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
         <Route path="/user/list" element={protectedRoute(<UserListPage />)} />
-        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} />
-        <Route path="/user/show" element={protectedRoute(<UserCreatePage />)} />
+        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} /> 
+        <Route path="/user/:userName" element={protectedRoute(<UserViewPage />)}/>
+
 
         <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />

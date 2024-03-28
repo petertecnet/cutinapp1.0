@@ -75,11 +75,20 @@ const Navigation = () => {
                 Minhas Vendas
               </NavDropdown.Item>
             </NavDropdown>
-          </Nav>
+          </Nav>   {user && (
+            <img
+              src={user.avatar ? `${storageUrl}/${user.avatar}` : "/images/loadingimage.gif"}
+              alt="Avatar"
+              className="avatar text-center"
+              style={{ maxWidth: "40px", borderRadius: "40%" }}
+            />
+          )}
           {user && (
-            <NavDropdown title={user.first_name} id="profile-dropdown">
-              <NavDropdown.Item as={Link} to="/user/edit">
-                Meu Perfil
+            
+            <NavDropdown title={user.first_name} id="profile-dropdown" className=" text-white auth-dropdown">
+             
+              <NavDropdown.Item as={Link} to={`/user/edit`}>
+              Gerenciar conta
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/profile">
                 Minha Carteira
@@ -92,14 +101,7 @@ const Navigation = () => {
               </NavDropdown.Item>
             </NavDropdown>
           )}
-          {user && (
-            <img
-              src={user.avatar ? `${storageUrl}/${user.avatar}` : "/images/loadingimage.gif"}
-              alt="Avatar"
-              className="avatar"
-              style={{ maxWidth: "50px", borderRadius: "50%" }}
-            />
-          )}
+        
         </Navbar.Collapse>
       </Container>
     </Navbar>

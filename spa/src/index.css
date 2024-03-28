@@ -28,7 +28,7 @@ body {
   background-image: linear-gradient(to right, #7c6594, #000); /* Degradê de #7c6594 para preto */
   border-radius: 20px;
   backdrop-filter: blur(30px);
-  border: 3px solid rgb(255, 255, 255);
+  border: 2px solid #bd86f7;
   margin: 30px;
   padding: 10px;
   transition: background-color 0.3s ease; /* Transição suave para mudanças de cor de fundo */
@@ -67,43 +67,36 @@ body {
 
 /* Estilo ao passar o mouse */
 .navbar-toggler:hover {
-  transform: scale(1.1); /* Aumenta ligeiramente o tamanho do ícone ao passar o mouse */
+  transform: scale(1.5); /* Aumenta ligeiramente o tamanho do ícone ao passar o mouse */
 }
 @keyframes blink {
   0% {
 
-    border-radius: 80px;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgb(255, 255, 255);
+   
+  border: 3px solid rgb(255, 0, 0);
   }
 
   50% {
 
-    border-radius: 20px;
-
-    background-color: rgba(23, 5, 73, 0.8);
-    backdrop-filter: blur(20px);
+    
+  border: 3px solid rgb(255, 255, 255);
+  opacity: 0.5;
   }
 
   100% {
-    border-radius: 80px;
-
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgb(255, 255, 255);
+   
+  border: 3px solid rgb(255, 0, 0);
   }
 }
 
 .alert {
-  background-color: rgba(245, 6, 6, 0.514);
-  color: white;
   padding: 30px;
   border-radius: 20px;
   border: 1px solid rgb(2, 0, 0);
   backdrop-filter: blur(5px);
   animation: blink 3s infinite;
   margin: 10px;
+  opacity: 0.8;
 }
 .img-production-logo {
   position: absolute;
@@ -140,4 +133,50 @@ body {
  border-radius: 30px;
  margin: 15px;
  border: 3px solid rgb(10, 14, 255);
+}
+
+.card-user{
+  
+  background-image: linear-gradient(to right, #092e35, #010825); 
+ color: rgb(199, 232, 241);
+ padding: 15px;  
+ backdrop-filter: blur(1px);
+ font-size:15px;
+ border-radius: 30px;
+ margin: 15px;
+ border: 1px solid rgb(255, 255, 255);
+}
+.card-user:hover{
+  
+  background-color: rgba(1, 5, 15);
+ color: rgb(255, 255, 255);
+ padding: 15px;  
+ backdrop-filter: blur(1px);
+ font-size:15px;
+ border-radius: 30px;
+ margin: 15px;
+ border: 3px solid rgb(255, 255, 255);
+}
+.auth-dropdown{
+  margin-right: 5%;
+  border: 10px solid black;
+  color:white;
+}
+
+/* Estilização da caixa de dropdown */
+.auth-dropdown .dropdown-menu {
+  left: -50%; /* Ajusta a posição da caixa de dropdown para a esquerda */
+  border: none; /* Remove a borda */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave */
+  background-image: linear-gradient(to right, #96e5f3, #f0f0f0); /* Define um degradê de cores claras */
+}
+
+/* Estilização dos itens do dropdown */
+.auth-dropdown .dropdown-item {
+  color: #333; /* Define a cor do texto */
+}
+
+/* Estilização dos itens do dropdown quando estão sendo destacados */
+.auth-dropdown .dropdown-item:hover {
+  background-color: #f8f8f8; /* Define a cor de fundo quando o item é destacado */
 }

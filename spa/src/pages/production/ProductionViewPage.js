@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import NavlogComponent from "../../components/NavlogComponent";
 import productionService from "../../services/ProductionService";
 import { storageUrl } from "../../config";
@@ -62,21 +62,47 @@ const ProductionViewPage = () => {
                 <Card.Text className="text-center">
                   {data.production.establishment_type}
                 </Card.Text>
-              {data.views}  Vizualizações
+                
+         
+
+                <Card.Text>{data.views} Visualizações</Card.Text>
+                
+               
+                
               </Card>
+              
             </Card>
           </Col>
           <Col md={4}>
             <Card>
-              <Card.Text className="text-center">
-                <a
-                  href={data.production.location}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            <Card.Text className="text-center">
+  <Button variant="primary"  ahref={data.production.location} style={{ cursor: "pointer" }}>
+  <a href={data.production.location} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ cursor: "pointer" }}>
+  Ver localização desta produção no Google Maps
+</a>
+
+  </Button>
+</Card.Text>
+
+                <Link
+                  to={`/user/${data.production.user.user_name}`}
+                  style={{ textDecoration: "none" }}
                 >
-                  Ver no Google Maps
-                </a>
-              </Card.Text>
+                  <div className="rounded-circle m-2">
+                    {data.production.user.avatar && (
+                      <img
+                        src={`${storageUrl}/${data.production.user.avatar}`}
+                        alt={`${data.production.user.first_name} Produtor da produção ${data.production.name} da Logo`}
+                        className="rounded-circle"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    )}
+                  </div>
+                  
+                </Link>
+
+                
+              <Card.Text > <strong>Produtor: </strong>{data.production.user.first_name} </Card.Text>
               <Card.Text>
                 {data.production.city} {data.production.uf}
               </Card.Text>
