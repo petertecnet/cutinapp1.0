@@ -58,4 +58,3 @@ Route::group([
     Route::get('/view/{slug}', [ProductionController::class, 'view'])->name('production.view'); // Rota para visualizar uma produção por slug
     // Adicione outras rotas de produção conforme necessário
 });
-
