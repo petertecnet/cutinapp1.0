@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+<<<<<<< HEAD
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 <<<<<<< HEAD
@@ -17,20 +18,48 @@ import EmailVerifyPage from "./pages/EmailVerifyPage";
 import LogoutPage from "./pages/LogoutPage";
 import PasswordEmailPage from "./pages/PasswordEmailPage";
 import PasswordPage from "./pages/PasswordPage";
+=======
+//Auth
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import EmailVerifyPage from "./pages/auth/EmailVerifyPage";
+import LogoutPage from "./pages/auth/LogoutPage";
+import PasswordEmailPage from "./pages/auth/PasswordEmailPage";
+import PasswordPage from "./pages/auth/PasswordPage";
+>>>>>>> main
 import DashboardPage from "./pages/DashboardPage";
 
-import UserEditPage from "./pages/user/UserEditPage";
-import UserListPage from "./pages/user/UserListPage";
-import UserCreatePage from "./pages/user/UserCreatePage";
 
-import ProfileCreatePage from "./pages/profile/ProfileCreatePage";
-import ProfileListPage from "./pages/profile/ProfileListPage";
-import ProfileUpdatePage from "./pages/profile/ProfileUpdatePage";
+
+// Administrativo
+// User
+import UserListPage from "./pages/admin/user/UserListPage";
+import UserCreatePage from "./pages/admin/user/UserCreatePage";
+// Profile
+import ProfileCreatePage from "./pages/admin/profile/ProfileCreatePage";
+import ProfileListPage from "./pages/admin/profile/ProfileListPage";
+import ProfileUpdatePage from "./pages/admin/profile/ProfileUpdatePage";
+// Production
+import ProductionListAdminPage from "./pages/admin/production/ProductionListAdminPage";
+
+// Corporativo
+import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
+
+//Participativo
+//Production
+import ProductionCreatePage from "./pages/production/ProductionCreatePage";
+import ProductionListPage from "./pages/production/ProductionPage";
+import ProductionViewPage  from "./pages/production/ProductionViewPage";
+
+
+//User
+import UserViewPage  from "./pages/user/UserViewPage";
+import UserEditPage from "./pages/user/UserEditPage";
+
 
 
 import LoadingComponent from "./components/LoadingComponent";
 import authService from "./services/AuthService";
-import './css/card.css'; 
 
 
 const App = () => {
@@ -88,6 +117,7 @@ const App = () => {
 
   return (
     <Router>
+      
       <Routes>
         <Route path="/register" element={restrictedRoute(<RegisterPage />)} />
         <Route path="/login" element={restrictedRoute(<LoginPage />)} />
@@ -116,13 +146,25 @@ const App = () => {
         
         <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
         <Route path="/user/list" element={protectedRoute(<UserListPage />)} />
-        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} />
+        <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} /> 
+        <Route path="/user/:userName" element={protectedRoute(<UserViewPage />)}/>
+
 
         <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />
-        <Route path="/profile/update/:id" element={protectedRoute(<ProfileUpdatePage />)}
-/>
+        <Route path="/profile/update/:id" element={protectedRoute(<ProfileUpdatePage />)}/>
+        
+        <Route path="/production/list" element={protectedRoute(<ProductionListAdminPage />)} />
        
+
+        <Route path="/production/create" element={protectedRoute(<ProductionCreatePage />)} />
+        <Route path="/productions" element={protectedRoute(<ProductionListPage />)} /> 
+        <Route path="/production/update/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
+        <Route path="/production/show/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
+        <Route path="/production/view/:slug" element={protectedRoute(<ProductionViewPage />)}/>
+      
+       
+
       </Routes>
     </Router>
   );

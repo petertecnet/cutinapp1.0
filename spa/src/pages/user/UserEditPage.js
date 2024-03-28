@@ -14,8 +14,9 @@ import userService from "../../services/UserService";
 import NavlogComponent from "../../components/NavlogComponent";
 import LoadingComponent from "../../components/LoadingComponent";
 import { storageUrl } from "../../config";
+import cepService from "../../services/CepService";
 
-const ProfileEditPage = () => {
+const UserEditPage = () => {
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     first_name: "",
@@ -90,14 +91,12 @@ const ProfileEditPage = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
-    // Atualiza a pré-visualização da nova foto
     const reader = new FileReader();
     reader.onload = function (event) {
       setPreviewImage(event.target.result);
     };
     reader.readAsDataURL(file);
 
-    // Atualiza o estado do formulário com o novo arquivo de imagem
     setFormData({
       ...formData,
       avatar: file,
@@ -106,53 +105,62 @@ const ProfileEditPage = () => {
 
   const handleSubmit = async () => {
     try {
-      // Crie um objeto para armazenar apenas os campos modificados
       const modifiedData = {};
-      // Iterar sobre os campos do formulário e adicionar apenas os modificados ao objeto
       for (const key in formData) {
         if (formData[key] !== user[key]) {
           modifiedData[key] = formData[key];
         }
       }
-      // Verificar se há campos modificados antes de fazer a atualização
       if (Object.keys(modifiedData).length === 0) {
-        // Se não houver campos modificados, não há necessidade de fazer uma chamada à API
         return;
       }
       const success = await userService.update(user.id, modifiedData);
       if (success) {
-        // Atualiza os dados do usuário após a atualização bem-sucedida
         const updatedUserData = await authService.me();
-        console.log(updatedUserData.data);
-        showAlertWithTimer("sucess", updatedUserData.message);
-
+        showAlertWithTimer("success", "Dados atualizados com sucesso");
         setUser(updatedUserData);
       }
     } catch (error) {
       console.error(error.data);
-
-      showAlertWithTimer("danger", error);
-
+      showAlertWithTimer("danger", error.message);
       setError("Erro ao atualizar o usuário. Por favor, tente novamente.");
     }
   };
+
+  const handleCepChange = async (e) => {
+    const cep = e.target.value;
+    setFormData({ ...formData, cep: cep });
+    if (cep.length === 8) {
+      try {
+        const addressInfo = await cepService.getAddressInfo(cep);
+        if (addressInfo) {
+          setFormData({
+            ...formData,
+            uf: addressInfo.uf,
+            city: addressInfo.cidade,
+            address: `${addressInfo.logradouro} - ${addressInfo.bairro}`,
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao buscar informações do CEP:", error);
+      }
+    }
+  };
+  
 
   const showAlertWithTimer = (type, message) => {
     setShowAlert(true);
     setAlertMessage(message);
     setAlertType(type);
 
-    // Limpar o temporizador atual, se existir
     if (timerId) {
       clearTimeout(timerId);
     }
 
-    // Definir um novo temporizador para ocultar o alerta após 3 segundos
     const id = setTimeout(() => {
       setShowAlert(false);
     }, 3000);
 
-    // Atualizar o estado com o ID do temporizador
     setTimerId(id);
   };
 
@@ -181,7 +189,7 @@ const ProfileEditPage = () => {
                   variant={alertType}
                   onClose={() => {
                     setShowAlert(false);
-                    clearTimeout(timerId); // Limpar temporizador ao fechar manualmente
+                    clearTimeout(timerId);
                   }}
                   dismissible
                 >
@@ -312,7 +320,6 @@ const ProfileEditPage = () => {
                     Salvar Alterações
                   </Button>
                 </Form>
-                {/* Exibir o alerta com temporizador */}
               </Card.Body>
             </Card>
           </Col>
@@ -320,9 +327,12 @@ const ProfileEditPage = () => {
             <Card>
               <Card.Body>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <h2 className="text-center mt-4">Informações extras</h2>
 =======
                 <p className="text-center mt-4 h2">INFORMAÇÕES EXTRA</p>
+>>>>>>> main
+=======
 >>>>>>> main
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Alert
@@ -330,7 +340,7 @@ const ProfileEditPage = () => {
                   variant={alertType}
                   onClose={() => {
                     setShowAlert(false);
-                    clearTimeout(timerId); // Limpar temporizador ao fechar manualmente
+                    clearTimeout(timerId);
                   }}
                   dismissible
                 >
@@ -402,6 +412,18 @@ const ProfileEditPage = () => {
                 <Row></Row>
 >>>>>>> main
                 <Row>
+                  <Col md={3}>
+                    <Form.Group controlId="formPostalCode" className="mt-4">
+                      <Form.Control
+                        type="text"
+                        placeholder="CEP"
+                        name="postal_code"
+                        value={formData.postal_code}
+                        onChange={handleCepChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
                   <Col md={4}>
                     <Form.Group controlId="formAddress" className="mt-4">
                       <Form.Control
@@ -438,18 +460,6 @@ const ProfileEditPage = () => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={3}>
-                    <Form.Group controlId="formPostalCode" className="mt-4">
-                      <Form.Control
-                        type="text"
-                        placeholder="CEP"
-                        name="postal_code"
-                        value={formData.postal_code}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
                 </Row>
 
                 <Row>
@@ -466,7 +476,6 @@ const ProfileEditPage = () => {
                       />
                     </Form.Group>
                   </Col>
-                  {/* Adicione mais dois campos de formulário semelhantes aqui */}
                 </Row>
 
                 <Button
@@ -486,7 +495,11 @@ const ProfileEditPage = () => {
 >>>>>>> main
                   Alterar senha
                 </Link>
-                {/* Exibir o alerta com temporizador */}
+                <Link className="btn bg-secondary m-4"
+                            to={`/user/${user.user_name}`}
+                            style={{ textDecoration: "none" }}
+                          >Meu profile
+                          </Link>
               </Card.Body>
             </Card>
           </Col>
@@ -496,4 +509,4 @@ const ProfileEditPage = () => {
   );
 };
 
-export default ProfileEditPage;
+export default UserEditPage;

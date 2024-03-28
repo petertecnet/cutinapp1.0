@@ -4,17 +4,6 @@ import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
 import authService from "../services/AuthService";
 import { storageUrl } from "../config";
 
-import {
-  BsPerson,
-  BsCalendar,
-  BsMusicNoteList,
-  BsGear,
-  BsBoxArrowRight,
-  BsChevronDown,
-  BsChevronRight
-} from "react-icons/bs";
-import "../css/navlog.css";
-
 const Navigation = () => {
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,8 +27,8 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className=" rounded">
-      <Container >
+    <Navbar expand="lg" sticky="top" bg="dark" variant="dark">
+      <Container>
         <Navbar.Brand as={Link} to="/">
           <img
             src="/images/loadingimage.gif"
@@ -51,15 +40,16 @@ const Navigation = () => {
         <Navbar.Toggle aria-controls="navbarNav" onClick={toggleMenu} />
         <Navbar.Collapse id="navbarNav" className={`${isMenuOpen ? "show" : ""}`}>
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/evetns">
+            <Nav.Link as={Link} to="/events">
               Eventos
             </Nav.Link>
             <Nav.Link as={Link} to="/productions">
               Produções
             </Nav.Link>
-            <Nav.Link as={Link} to="/artits">
+            <Nav.Link as={Link} to="/artists">
               Artistas
             </Nav.Link>
+<<<<<<< HEAD
             {user && (
               <NavDropdown title="Administrador" id="admin-dropdown">
 <<<<<<< HEAD
@@ -135,7 +125,61 @@ const Navigation = () => {
                 </li>
               </ul>
             </div>
+=======
+            <NavDropdown title="Administrativo" id="admin-dropdown">
+              <NavDropdown.Item as={Link} to="/user/list">
+                Usuários
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/profile/list">
+                Perfis
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/production/list">
+                Produções
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/event/list">
+                Eventos
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Corporativo" id="corporate-dropdown">
+              <NavDropdown.Item as={Link} to="/my-productions">
+                Minhas Produções
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/my-events">
+                Meus Eventos
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/my-sales">
+                Minhas Vendas
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>   {user && (
+            <img
+              src={user.avatar ? `${storageUrl}/${user.avatar}` : "/images/loadingimage.gif"}
+              alt="Avatar"
+              className="avatar text-center"
+              style={{ maxWidth: "40px", borderRadius: "40%" }}
+            />
+>>>>>>> main
           )}
+          {user && (
+            
+            <NavDropdown title={user.first_name} id="profile-dropdown" className=" text-white auth-dropdown">
+             
+              <NavDropdown.Item as={Link} to={`/user/edit`}>
+              Gerenciar conta
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/profile">
+                Minha Carteira
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/settings">
+                Configurações
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/logout">
+                Sair
+              </NavDropdown.Item>
+            </NavDropdown>
+          )}
+        
         </Navbar.Collapse>
       </Container>
     </Navbar>
