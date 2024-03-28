@@ -173,16 +173,9 @@ const UserEditPage = () => {
       <NavlogComponent />
       <Container fluid>
         <Row className="justify-content-center mt-4">
-<<<<<<< HEAD
-          <Col md={4} >
-            <Card>
-              <Card.Body>
-                <h2 className="text-center mb-4">Informações básicas</h2>
-=======
           <Col md={4}>
             <Card>
               <Card.Body>
->>>>>>> main
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Alert
                   show={showAlert}
@@ -326,14 +319,6 @@ const UserEditPage = () => {
           <Col xs={12} md={8}>
             <Card>
               <Card.Body>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                <h2 className="text-center mt-4">Informações extras</h2>
-=======
-                <p className="text-center mt-4 h2">INFORMAÇÕES EXTRA</p>
->>>>>>> main
-=======
->>>>>>> main
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Alert
                   show={showAlert}
@@ -363,11 +348,7 @@ const UserEditPage = () => {
                       </Form.Control>
                     </Form.Group>{" "}
                   </Col>
-<<<<<<< HEAD
-                  <Col md={3} >
-=======
                   <Col md={3}>
->>>>>>> main
                     <Form.Group controlId="formOccupation" className="mt-4">
                       <Form.Control
                         type="text"
@@ -404,13 +385,7 @@ const UserEditPage = () => {
                     </Form.Group>{" "}
                   </Col>
                 </Row>
-<<<<<<< HEAD
-                <Row>
-                  
-                </Row>
-=======
                 <Row></Row>
->>>>>>> main
                 <Row>
                   <Col md={3}>
                     <Form.Group controlId="formPostalCode" className="mt-4">
@@ -485,14 +460,7 @@ const UserEditPage = () => {
                 >
                   Salvar Alterações
                 </Button>
-<<<<<<< HEAD
-                <Link
-                  to="/password"
-                  className="btn bg-info m-4"
-                >
-=======
                 <Link to="/password" className="btn bg-info m-4">
->>>>>>> main
                   Alterar senha
                 </Link>
                 <Link className="btn bg-secondary m-4"
