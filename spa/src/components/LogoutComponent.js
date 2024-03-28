@@ -8,7 +8,7 @@ const LogoutComponent = () => {
 
   const handleLogout = async () => {
     try {
-      await authService.logout(); // 
+      await authService.logout 
         history('/login', { replace: true });
     } catch (error) {
       console.error('Erro durante o logout:', error);

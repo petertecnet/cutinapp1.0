@@ -1,8 +1,21 @@
 import React, { Component } from "react";
-import authService from "../services/AuthService";
+import authService from "../../services/AuthService";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import gifSpinner from "../../images/loadingImage2.gif";
+
+// Defina o componente CustomSpinner fora da classe PasswordEmailPage
+const CustomSpinner = () => {
+  return (
+    <img
+      src={gifSpinner}
+      alt="Spinner"
+      className="rounded-circle"
+      style={{ width: "20px", height: "20px" }}
+    />
+  );
+};
 
 class PasswordEmailPage extends Component {
   constructor(props) {
@@ -29,22 +42,25 @@ class PasswordEmailPage extends Component {
     this.setState({ loading: true });
 
     try {
-      await authService.passwordEmail(this.state.email);
+      const response = await authService.passwordEmail(this.state.email);
       this.setState({
         showAlert: true,
         alertType: "success",
-        alertMessage:
-          "Email enviado com sucesso. Verifique sua caixa de entrada.",
+        alertMessage: response.message,
         showPasswordResetForm: true,
         loading: false,
       });
+      // Configura o temporizador para ocultar o alerta após 5 segundos
+      setTimeout(() => {
+        this.setState({ showAlert: false });
+      }, 5000);
     } catch (error) {
+      console.log(error.message);
       console.error(error);
       this.setState({
         showAlert: true,
         alertType: "danger",
-        alertMessage:
-          "Erro ao enviar o email de recuperação. Por favor, tente novamente.",
+        alertMessage: error.message,
         loading: false,
       });
     }
@@ -68,7 +84,7 @@ class PasswordEmailPage extends Component {
 
     try {
       const email = this.state.email;
-      await authService.passwordReset(
+      const response = await authService.passwordReset(
         email,
         code,
         newPassword,
@@ -77,7 +93,7 @@ class PasswordEmailPage extends Component {
       this.setState({
         showAlert: true,
         alertType: "success",
-        alertMessage: "Senha redefinida com sucesso.",
+        alertMessage: response.data.message,
         showPasswordResetForm: false,
         code: "",
         newPassword: "",
@@ -88,8 +104,7 @@ class PasswordEmailPage extends Component {
       this.setState({
         showAlert: true,
         alertType: "danger",
-        alertMessage:
-          "Erro ao redefinir a senha. Por favor, verifique o código e tente novamente.",
+        alertMessage: error.message,
       });
     }
   };
@@ -112,7 +127,9 @@ class PasswordEmailPage extends Component {
 
                 {!this.state.showPasswordResetForm ? (
                   <Form onSubmit={this.onSubmitEmail}>
-                    <Card.Title className="text-center">Recuperar senha</Card.Title>
+                    <Card.Title className="text-center">
+                      Recuperar senha
+                    </Card.Title>
                     <Form.Group className="m-3">
                       <Form.Control
                         type="email"
@@ -123,15 +140,13 @@ class PasswordEmailPage extends Component {
                       />
                     </Form.Group>
                     <Button
-                    className="m-3"
+                      className="m-3"
                       variant="primary"
                       type="submit"
                       disabled={this.state.loading}
                     >
-                      {this.state.loading
-                        ? "Enviando..."
-                        : "Enviar Código de Recuperação"}
-                        
+                      {this.state.loading ? <CustomSpinner /> : "Enviar Código"}
+                      {this.state.loading && <>&nbsp;......</>}
                     </Button>
                     <p className="forgot-password text-right">
                       Já está registrado? <Link to="/login">Entrar</Link>
@@ -150,7 +165,6 @@ class PasswordEmailPage extends Component {
                         type="text"
                         placeholder="Insira o código"
                         onChange={this.onChangeCode}
-                        value={this.state.code}
                         required
                       />
                     </Form.Group>
@@ -178,8 +192,14 @@ class PasswordEmailPage extends Component {
                       variant="primary"
                       type="submit"
                       disabled={this.state.loading}
+                      style={{ position: "relative" }}
                     >
-                      {this.state.loading ? "Enviando..." : "Redefinir Senha"}
+                      {this.state.loading ? (
+                        <CustomSpinner />
+                      ) : (
+                        "Redefinir Senha"
+                      )}
+                      {this.state.loading && <>&nbsp;......</>}
                     </Button>
                     <p className="forgot-password text-right">
                       Não tenho cadastro: <Link to="/register">Cadastro</Link>
@@ -198,7 +218,7 @@ class PasswordEmailPage extends Component {
                   <p>{this.state.alertMessage}</p>
                   {!this.state.showPasswordResetForm ? (
                     <p className="forgot-password text-right">
-                      Agora que recuperou sua senha. Faça login:{" "}
+                      Se recuperou sua senha. Faça login:{" "}
                       <Link to="/login">Fazer login</Link>
                     </p>
                   ) : null}

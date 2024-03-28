@@ -32,7 +32,7 @@ const ProductionCreatePage = () => {
     is_approved: false,
     is_cancelled: false,
     additional_info: "",
-    facebook_url: "",
+    website_url: "",
     twitter_url: "",
     instagram_url: "",
     youtube_url: "",
@@ -106,7 +106,6 @@ const ProductionCreatePage = () => {
   const handleCepChange = async (e) => {
     const cep = e.target.value;
     setFormData({ ...formData, cep: cep });
-    if (cep.length === 8) {
       try {
         const addressInfo = await cepService.getAddressInfo(cep);
         if (addressInfo) {
@@ -114,13 +113,13 @@ const ProductionCreatePage = () => {
             ...formData,
             uf: addressInfo.uf,
             city: addressInfo.cidade,
+            cep: addressInfo.cep,
             address: `${addressInfo.logradouro} - ${addressInfo.bairro}`,
           });
         }
       } catch (error) {
         console.error("Erro ao buscar informações do CEP:", error);
       }
-    }
   };
 
   useEffect(() => {
@@ -145,14 +144,14 @@ const ProductionCreatePage = () => {
           <Col md={4}>
             <Card>
             <Form.Group controlId="formLogo">
-        <div className="text-center p-5 bg-secondary rounded">
+        <div className="text-center p-5  bg-secondary rounded">
           <label htmlFor="logoInput" style={{ cursor: "pointer", display: "block" }}>
             {logoPreview ? (
               <img
                 src={logoPreview}
                 alt="Preview da Logo"
                 className="img-fluid rounded-circle"
-                style={{ maxWidth: "100%", height: "auto" }} // Ajusta a largura da imagem para preencher o container
+                style={{ maxWidth: "300px", height: "auto" }} // Ajusta a largura da imagem para preencher o container
               />
             ) : (
               <i className="fas fa-camera fa-3x img-fluid rounded-circle"></i>
@@ -194,6 +193,7 @@ const ProductionCreatePage = () => {
                   className="mt-3"
                 >
                   <option value="">Estabelecimento</option>
+                  <option value="Boate">Boate</option>
                   <option value="Restaurante">Restaurante</option>
                   <option value="Bar">Bar</option>
                   <option value="Clube">Clube</option>
@@ -258,7 +258,7 @@ const ProductionCreatePage = () => {
                             src={backgroundPreview}
                             alt="Preview da Background"
                             className="img-fluid"
-                            style={{ maxWidth: "100%", height: "auto" }} // Ajusta a largura da imagem para preencher o container
+                            style={{ maxWidth: "1920", height: "auto" }} // Ajusta a largura da imagem para preencher o container
                           />
                         ) : (
                           <i className="fas fa-camera fa-3x"></i>
@@ -366,9 +366,9 @@ const ProductionCreatePage = () => {
                 <Col md={6} className="mt-2">
                   <Form.Control
                     type="text"
-                    name="facebook_url"
-                    placeholder="URL do Facebook"
-                    value={formData.facebook_url}
+                    name="website_url"
+                    placeholder="URL do website"
+                    value={formData.website_url}
                     onChange={handleInputChange}
                   />
                 </Col>

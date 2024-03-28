@@ -8,8 +8,8 @@ import {
   Card,
   Alert,
 } from "react-bootstrap";
-import NavlogComponent from "../components/NavlogComponent";
-import authService from "../services/AuthService";
+import NavlogComponent from "../../components/NavlogComponent";
+import authService from "../../services/AuthService";
 import { Link } from "react-router-dom";
 
 const PasswordPage = () => {

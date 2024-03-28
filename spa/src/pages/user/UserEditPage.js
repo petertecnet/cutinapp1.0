@@ -9,12 +9,12 @@ import {
   Alert,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import authService from "../services/AuthService";
-import userService from "../services/UserService";
-import NavlogComponent from "../components/NavlogComponent";
-import LoadingComponent from "../components/LoadingComponent";
-import { storageUrl } from "../config";
-import cepService from "../services/CepService";
+import authService from "../../services/AuthService";
+import userService from "../../services/UserService";
+import NavlogComponent from "../../components/NavlogComponent";
+import LoadingComponent from "../../components/LoadingComponent";
+import { storageUrl } from "../../config";
+import cepService from "../../services/CepService";
 
 const UserEditPage = () => {
   const [user, setUser] = useState(null);
@@ -463,6 +463,11 @@ const UserEditPage = () => {
                 <Link to="/password" className="btn bg-info m-4">
                   Alterar senha
                 </Link>
+                <Link className="btn bg-secondary m-4"
+                            to={`/user/${user.user_name}`}
+                            style={{ textDecoration: "none" }}
+                          >Meu profile
+                          </Link>
               </Card.Body>
             </Card>
           </Col>

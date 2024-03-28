@@ -6,12 +6,12 @@ import {
   Navigate,
 } from "react-router-dom";
 //Auth
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import EmailVerifyPage from "./pages/EmailVerifyPage";
-import LogoutPage from "./pages/LogoutPage";
-import PasswordEmailPage from "./pages/PasswordEmailPage";
-import PasswordPage from "./pages/PasswordPage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import EmailVerifyPage from "./pages/auth/EmailVerifyPage";
+import LogoutPage from "./pages/auth/LogoutPage";
+import PasswordEmailPage from "./pages/auth/PasswordEmailPage";
+import PasswordPage from "./pages/auth/PasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 
 
@@ -39,7 +39,7 @@ import ProductionViewPage  from "./pages/production/ProductionViewPage";
 
 //User
 import UserViewPage  from "./pages/user/UserViewPage";
-import UserEditPage from "./pages/UserEditPage";
+import UserEditPage from "./pages/user/UserEditPage";
 
 
 
@@ -102,6 +102,7 @@ const App = () => {
 
   return (
     <Router>
+      
       <Routes>
         <Route path="/register" element={restrictedRoute(<RegisterPage />)} />
         <Route path="/login" element={restrictedRoute(<LoginPage />)} />

@@ -52,51 +52,7 @@ const UserViewPage = () => {
         <Row>
           <Col md={12}>
             <Row>
-              <Col md={5}>
-                <Card className="card-user">
-                  <Card.Body>
-                    {user && (
-                      <>
-                        <Card.Title className="text-center mb-2"> 
-                          {`${user.first_name} ${
-                            user.last_name ? user.last_name : ""
-                          }`}
-                        </Card.Title>
-                        <Card.Subtitle className="text-center mb-2">
-                          {user.email}
-                        </Card.Subtitle>
-                        <Card.Text className="mb-2">
-                          <div className="text-center">
-                            <img
-                              src={
-                                user.avatar
-                                  ? `${storageUrl}/${user.avatar}`
-                                  : "/images/loadingimage.gif"
-                              }
-                              alt={`${user.first_name} ${
-                                user.last_name ? user.last_name : ""
-                              }`}
-                              className="rounded-circle "
-                             
-                            />
-                          </div>
-                          <br />
-                          <strong>CPF:</strong> {user.cpf} <br />
-                          <strong>Endereço:</strong> {user.address} <br />
-                          <strong>Telefone:</strong> {user.phone} <br />
-                          <strong>Cidade:</strong> {user.city} <br />
-                          <strong>UF:</strong> {user.uf} <br />
-                          <strong>Idade:</strong> {calculateAge(user.birthdate)} anos <br />
-                          <strong>Gênero:</strong> {user.gender} <br />
-                          <strong>Estado Civil:</strong> {user.marital_status}{" "}
-                          <br />
-                          <strong>Profissão:</strong> {user.occupation} <br />
-                        </Card.Text>
-                      </>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
+             
               <Col md={7} >
                 <Card className="card-user">
                   <Card.Body>
@@ -111,6 +67,49 @@ const UserViewPage = () => {
                           {user.favorite_artist} <br />
                           <strong>Gênero Favorito:</strong>{" "}
                           {user.favorite_genre} <br />
+                        </Card.Text>
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={5}>
+                <Card className="card-user">
+                  <Card.Body>
+                    {user && (
+                      <>
+                        <Card.Text className="mb-2">
+                          <div className="text-center">
+                            <img
+                              src={
+                                user.avatar
+                                  ? `${storageUrl}/${user.avatar}`
+                                  : "/images/loadingimage.gif"
+                              }
+                              alt={`${user.first_name} ${
+                                user.last_name ? user.last_name : ""
+                              }`}
+                              className="rounded-circle "
+                              
+                            style={{ maxWidth: "250px", borderRadius: "250%" }}
+                             
+                            />
+                          </div>
+                          <br />
+                          <strong>Nome:</strong> {user.first_name} {user.last_name} <br />
+                       
+                          <strong>Email:</strong> {user.email} <br />
+                       
+                          <strong>CPF:</strong> {user.cpf} <br />
+                          <strong>Endereço:</strong> {user.address} <br />
+                          <strong>Telefone:</strong> {user.phone} <br />
+                          <strong>Cidade:</strong> {user.city} <br />
+                          <strong>UF:</strong> {user.uf} <br />
+                          <strong>Idade:</strong> {calculateAge(user.birthdate)} anos <br />
+                          <strong>Gênero:</strong> {user.gender} <br />
+                          <strong>Estado Civil:</strong> {user.marital_status}{" "}
+                          <br />
+                          <strong>Profissão:</strong> {user.occupation} <br />
                         </Card.Text>
                       </>
                     )}
