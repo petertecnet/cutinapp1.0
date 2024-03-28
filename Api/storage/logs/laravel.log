@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2024-03-28 04:37:33] local.INFO: Slug fornecido: {"slug":"putz-club"} 
 [2024-03-28 04:37:33] local.INFO: Produção encontrada: {"production":{"App\\Models\\Production":{"id":2,"name":"Putz Club","type":null,"slug":"putz-club","establishment_type":"Boate","phone":"61983266991","segments":null,"description":"A PUTZ! Club é uma adição emocionante à cena noturna de Brasília, trazendo consigo toda a energia e vibe da renomada PUTZ! Lounge, localizada em Ceilândia. Com uma proposta única e vibrante, nossa boate promete proporcionar experiências inesquecíveis para todos os seus frequentadores.
 
@@ -106,3 +107,7 @@ No backend, estou moldando a lógica de negócios com o Laravel, garantindo que 
 
 
 Estou animado para compartilhar mais sobre meu trabalho e contribuir para o sucesso deste projeto inovador. Se você também é apaixonado por tecnologia e busca soluções criativas, estou pronto para colaborar e transformar ideias em realidade!","favorite_artist":"Metalllica","favorite_genre":"Heavy Metal","payment_method":null,"newsletter_subscription":1,"ticket_purchases":null,"account_balance":null,"is_producer":null,"is_participant":null,"is_promoter":null,"is_partner":null,"is_ticket_seller":null,"extra_info":null,"profile_id":1}}}} 
+=======
+[2024-03-28 04:54:09] local.ERROR: Usuário não autenticado.  
+[2024-03-28 04:54:44] local.ERROR: Usuário não autenticado.  
+>>>>>>> main
