@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\{User, Interaction};
 use App\Mail\VerificationCodeMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Mail\ResendVerificationCodeMail;
+use App\Mail\{ResendVerificationCodeMail, ResetPasswordMail};
 use Validator;
 use Exception;
 
@@ -59,6 +59,16 @@ class AuthController extends Controller
             if (!$token = auth()->attempt($validator->validated())) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
+
+
+            $interaction = new Interaction();
+            $interaction->user_id = auth()->user()->id;
+            $interaction->interaction_type = 'login';
+            $interaction->entity_id = auth()->user()->id;
+            $interaction->entity_type = 'user';
+            $interaction->save();
+
+
 
             return $this->createNewToken($token);
         } catch (ValidationException $exception) {
@@ -109,6 +119,13 @@ class AuthController extends Controller
             // Envio do e-mail de verificação
             Mail::to($user->email)->send(new VerificationCodeMail($verificationCode, $user));
 
+            $interaction = new Interaction();
+            $interaction->user_id = $user->id;
+            $interaction->interaction_type = 'resgister';
+            $interaction->entity_id = $user->id;
+            $interaction->entity_type = 'user';
+            $interaction->save();
+
             return response()->json(['message' => 'Registro bem-sucedido'], 201);
         } catch (ValidationException $e) {
             // Captura de exceções de validação
@@ -147,6 +164,13 @@ class AuthController extends Controller
                 $user->verification_code = null; // Limpa o código de verificação após a validação
                 $user->save();
 
+                $interaction = new Interaction();
+                $interaction->user_id = $user->id;
+                $interaction->interaction_type = 'verification';
+                $interaction->entity_id = $user->id;
+                $interaction->entity_type = 'user';
+                $interaction->save();
+
                 return response()->json(['message' => 'E-mail verificado com sucesso']);
             } else {
                 return response()->json(['error' => 'Código de verificação inválido'], 422);
@@ -183,7 +207,12 @@ class AuthController extends Controller
             // Atualizar a senha do usuário
             $user->password = bcrypt($request->input('new_password'));
             $user->save();
-
+            $interaction = new Interaction();
+            $interaction->user_id = $user->id;
+            $interaction->interaction_type = 'changePassword';
+            $interaction->entity_id = $user->id;
+            $interaction->entity_type = 'user';
+            $interaction->save();
             return response()->json(['message' => 'Senha atualizada com sucesso']);
         } catch (ValidationException $e) {
             return response()->json(['error' => 'Erro de validação', 'errors' => $e->errors()], 422);
@@ -201,8 +230,15 @@ class AuthController extends Controller
      */
 
     public function logout()
-    {
+    { $interaction = new Interaction();
+        $interaction->user_id = Auth()->user()->id;
+        $interaction->interaction_type = 'logout';
+        $interaction->entity_id = Auth()->user()->id;
+        $interaction->entity_type = 'user';
+        $interaction->save();
+        
         if (Auth::check()) {
+           
             Auth::logout();
             return response()->json(['message' => 'Logout realizado com sucesso']);
         } else {
@@ -237,6 +273,13 @@ class AuthController extends Controller
 
             // Log da geração do código de redefinição de senha
             Log::info('Código de redefinição de senha gerado e enviado por e-mail', ['email' => $request->email, 'code' => $code]);
+            $interaction = new Interaction();
+            $interaction->user_id = $user->id;
+            $interaction->interaction_type = 'ResetCode';
+            $interaction->entity_id = $user->id;
+            $interaction->entity_type = 'user';
+            $interaction->save();
+
 
             return response()->json(['message' => 'Código de redefinição de senha enviado por e-mail']);
         } catch (ValidationException $e) {
@@ -283,6 +326,15 @@ class AuthController extends Controller
             $user->reset_password_code = null;
             $user->reset_password_expires_at = null;
             $user->save();
+
+            Log::info('Senha altera com suesso', ['email' => $request->email]);
+           
+            $interaction = new Interaction();
+            $interaction->user_id = $user->id;
+            $interaction->interaction_type = 'PasswordChanged';
+            $interaction->entity_id = $user->id;
+            $interaction->entity_type = 'user';
+            $interaction->save();
 
             return response()->json(['message' => 'Senha redefinida com sucesso']);
         } catch (ValidationException $e) {
@@ -354,7 +406,12 @@ class AuthController extends Controller
     
             // Envio do e-mail de verificação com o novo código
             Mail::to($user->email)->send(new ResendVerificationCodeMail($newVerificationCode, $user));
-    
+            $interaction = new Interaction();
+            $interaction->user_id = Auth()->user()->id;
+            $interaction->interaction_type = 'ResetCodeVerification';
+            $interaction->entity_id = Auth()->user()->id;
+            $interaction->entity_type = 'user';
+            $interaction->save();
             return response()->json(['message' => 'Novo código de verificação enviado com sucesso.'], 200);
         } catch (ValidationException $e) {
             // Captura de exceções de validação

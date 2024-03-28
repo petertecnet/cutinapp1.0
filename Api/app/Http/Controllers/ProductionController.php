@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use App\Models\{Production,Event,Blog, Interaction};
+use App\Models\{Production,Event, Interaction};
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
@@ -30,14 +29,13 @@ class ProductionController extends Controller
     {
         try {
             // Obter todas as produções cadastradas com o nome do produtor
-            $productions = Production::select('productions.*', 'users.first_name as owner')
-                ->join('users', 'productions.user_id', '=', 'users.id')
-                ->get();
-    
+            $productions = Production::with('user')->get();
+
+      
             // Retornar as produções com o nome do produtor como resposta em formato JSON
             return response()->json(['productions' => $productions], 200);
         } catch (\Exception $e) {
-            // Em caso de erro, retornar uma mensagem de erro em formato JSON
+            Log::error('Erro ao listar produções: ' . $e->getMessage());
             return response()->json(['error' => 'Ocorreu um erro ao listar as produções.'], 500);
         }
     }
@@ -68,6 +66,7 @@ class ProductionController extends Controller
                 'is_cancelled' => (int) $request->input('is_cancelled'), // Convertendo para inteiro
                 'additional_info' => $request->input('additional_info'),
                 'facebook_url' => $request->input('facebook_url'),
+                'website_url' => $request->input('website_url'),
                 'twitter_url' => $request->input('twitter_url'),
                 'instagram_url' => $request->input('instagram_url'),
                 'youtube_url' => $request->input('youtube_url'),
@@ -146,6 +145,7 @@ class ProductionController extends Controller
                 'is_cancelled' => (int) $request->input('is_cancelled', $production->is_cancelled),
                 'additional_info' => $request->input('additional_info', $production->additional_info),
                 'facebook_url' => $request->input('facebook_url', $production->facebook_url),
+                'website_url' => $request->input('website_url', $production->website_url),
                 'twitter_url' => $request->input('twitter_url', $production->twitter_url),
                 'instagram_url' => $request->input('instagram_url', $production->instagram_url),
                 'youtube_url' => $request->input('youtube_url', $production->youtube_url),
@@ -207,7 +207,8 @@ class ProductionController extends Controller
 {
     try {
         // Encontrar a produção pelo ID
-        $production = Production::findOrFail($id);
+        $production = Production::where('id', $id)->with('user')->firstOrFail();
+      
 
         // Retornar a produção como resposta em formato JSON
         return response()->json(['production' => $production], 200);
@@ -222,8 +223,7 @@ public function view($slug)
         // Log para verificar o slug fornecido
         \Log::info('Slug fornecido:', ['slug' => $slug]);
 
-        $production = Production::where('slug', $slug)->firstOrFail();
-
+        $production = Production::where('slug', $slug)->with('user')->firstOrFail();
         // Log para verificar a produção encontrada pelo slug
         \Log::info('Produção encontrada:', ['production' => $production]);
 
@@ -241,9 +241,6 @@ public function view($slug)
         $radonproduction = Production::where('id', '!=', $production->id)->inRandomOrder() // Ordena os resultados de forma aleatória
             ->first();
 
-        $nomeDaProducao = $production->name; // Substitua 'nome' pelo nome correto do campo// Obtém os segmentos da produção
-
-        // Busca um blog com base no nome da produção e suas tags correspondentes
        
 
         // Verifica se o usuário está autenticado

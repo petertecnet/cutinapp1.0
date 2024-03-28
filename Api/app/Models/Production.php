@@ -12,7 +12,7 @@ class Production extends Model
         'cep', 'address', 'user_id', 'is_featured', 'is_published', 'is_approved', 'is_cancelled',
         'additional_info', 'facebook_url', 'twitter_url', 'instagram_url', 'youtube_url',
         'other_information', 'ticket_price_min', 'ticket_price_max', 'total_tickets_sold',
-        'total_tickets_available', 'logo', 'background', 'segments',
+        'total_tickets_available', 'logo', 'background', 'segments','website_url'
     ];
 
     protected $casts = [

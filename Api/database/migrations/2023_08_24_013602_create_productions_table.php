@@ -41,6 +41,7 @@ class CreateProductionsTable extends Migration
             $table->boolean('is_cancelled')->default(false);
             $table->text('additional_info')->nullable();
             $table->string('facebook_url')->nullable();
+            $table->string('website_url')->nullable();
             $table->string('twitter_url')->nullable();
             $table->string('instagram_url')->nullable();
             $table->string('youtube_url')->nullable();
