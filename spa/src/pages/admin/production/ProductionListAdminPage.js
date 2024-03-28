@@ -96,7 +96,7 @@ const ProductionListAdminPage = () => {
                               style={{ textDecoration: "none", color: "white" }}
                             >{production.name}</Link></td>
                         <td>    <Link
-                    to={`/production/view/${production.slug}`}
+                    to={`/user/${production.user.user_name}`}
                     style={{ textDecoration: "none", color: "white" }}
                   >   {production.user.avatar && (
                  
