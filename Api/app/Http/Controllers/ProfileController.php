@@ -48,6 +48,10 @@ class ProfileController extends Controller
         // Obter o usuário autenticado
         $user = Auth::user();
 
+        // Verificar se o usuário possui permissão para criar perfis
+        if (!$user->hasPermission('profile_create')) {
+            return response()->json(['error' => 'Você não tem permissão para criar perfis.'], 403);
+        }
 
         $data = $request->validate([
             'name' => 'required|string',
