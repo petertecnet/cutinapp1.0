@@ -155,6 +155,15 @@ const permissions = {
         'name': 'Editar perfil',
         'description': 'Permite ao usuário editar informações de um perfil existente.',
     },
+<<<<<<< HEAD
+=======
+    'profile_list':{
+        'permission': 'profile_list',
+        'category': 'Perfil',
+        'name': 'Listar perfil',
+        'description': 'Permite ao usuário listar os perfils existente.',
+    },
+>>>>>>> main
     'permission_management':{
         'permission': 'permission_management',
         'category': 'Sistema',

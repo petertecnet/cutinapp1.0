@@ -38,8 +38,8 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
-      <Container>
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className=" rounded">
+      <Container >
         <Navbar.Brand as={Link} to="/">
           <img
             src="/images/loadingimage.gif"
@@ -62,8 +62,13 @@ const Navigation = () => {
             </Nav.Link>
             {user && (
               <NavDropdown title="Administrador" id="admin-dropdown">
+<<<<<<< HEAD
                 <NavDropdown.Item as={Link} to="/users">Usuários</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/profile/create">Perfis</NavDropdown.Item>
+=======
+                <NavDropdown.Item as={Link} to="/user/list">Usuários</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/profile/list">Perfis</NavDropdown.Item>
+>>>>>>> main
               </NavDropdown>
             )}
           </Nav>

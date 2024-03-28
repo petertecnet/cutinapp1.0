@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Card,
+  Alert,
+} from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 import profileService from "../../services/ProfileService";
 import permissions from "../../utils/permissions";
-<<<<<<< HEAD
-=======
-import { Link } from "react-router-dom";
->>>>>>> main
 import NavlogComponent from "../../components/NavlogComponent";
 
-const ProfileCreatePage = () => {
+const ProfileUpdatePage = () => {
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
     selectedPermissions: [],
@@ -16,11 +22,25 @@ const ProfileCreatePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [apiMessage, setApiMessage] = useState(null);
-<<<<<<< HEAD
-=======
   const [showSuccessAlert, setShowSuccessAlert] = useState(false); // Estado para controlar a exibição do alerta de sucesso
   const [showErrorAlert, setShowErrorAlert] = useState(false);
->>>>>>> main
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await profileService.show(id);
+        setFormData({
+          name: profile.name,
+          selectedPermissions: profile.permissions || [],
+        });
+      } catch (error) {
+        console.error("Erro ao obter perfil:", error);
+        setError("Erro ao obter perfil. Por favor, tente novamente.");
+      }
+    };
+
+    fetchProfile();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +52,10 @@ const ProfileCreatePage = () => {
 
   const handlePermissionChange = (permissionId) => {
     setFormData((prevFormData) => {
-      if (prevFormData.selectedPermissions.includes(permissionId)) {
+      const isSelected =
+        prevFormData.selectedPermissions.includes(permissionId);
+
+      if (isSelected) {
         return {
           ...prevFormData,
           selectedPermissions: prevFormData.selectedPermissions.filter(
@@ -51,15 +74,18 @@ const ProfileCreatePage = () => {
     });
   };
 
-  const handleSelectAll = (categoryPermissions) => {
+  const handleSelectAllCategory = (categoryPermissions) => {
     const permissionsToAdd = categoryPermissions.map((p) => p.permission);
     setFormData({
       ...formData,
-      selectedPermissions: [...formData.selectedPermissions, ...permissionsToAdd],
+      selectedPermissions: [
+        ...formData.selectedPermissions,
+        ...permissionsToAdd,
+      ],
     });
   };
 
-  const handleClearAll = (categoryPermissions) => {
+  const handleClearAllCategory = (categoryPermissions) => {
     const permissionsToRemove = categoryPermissions.map((p) => p.permission);
     setFormData({
       ...formData,
@@ -92,41 +118,32 @@ const ProfileCreatePage = () => {
       if (formData.selectedPermissions.length === 0) {
         throw new Error("Nenhuma permissão selecionada");
       }
-  
-      const response = await profileService.create({
+
+      const response = await profileService.update(id, {
         name: formData.name,
         permissions: formData.selectedPermissions,
       });
-<<<<<<< HEAD
-  
-      // Verifica se a resposta da API possui uma mensagem
-      if (response && response.message) {
-        setApiMessage(response.message); // Define a mensagem da API para o alerta
-      }
-    } catch (error) {
-      console.error("Erro ao criar perfil:", error);
-      setError("Erro ao criar perfil. Verifique os dados e tente novamente.");
-=======
-      console.logo(response);
-      // Verifica se a resposta da API possui uma mensagem
       setApiMessage(response.data.message);
       setShowSuccessAlert(true); // Exibir o alerta de sucesso após a exclusão
       setTimeout(() => setShowSuccessAlert(false), 5000); // Ocultar o alerta após 5 segundos
-      } catch (error) {
-      console.error("Erro ao criar perfil:", error);
+     
+    
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+      setError(
+        "Erro ao atualizar perfil. Verifique os dados e tente novamente."
+      );
+
       setError("Erro ao criar perfil. Verifique os dados e tente novamente.");
       setShowErrorAlert(true); // Exibir o alerta de erro após a falha na exclusão
       setTimeout(() => setShowErrorAlert(false), 5000); // Ocultar o alerta após 5 segundos
  
->>>>>>> main
     } finally {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
-    // Função para fechar o alerta após 5 segundos
     if (apiMessage) {
       const timer = setTimeout(() => {
         setApiMessage(null);
@@ -142,11 +159,10 @@ const ProfileCreatePage = () => {
       <Container>
         <Row className="justify-content-md-center">
           <Col md={12}>
-            
-          <Form onSubmit={handleSubmit}>
-            <Card className="p-5">
-              <h2>Novo Perfil</h2>
-                <Col md={4} className=""> 
+            <Form onSubmit={handleSubmit}>
+              <Card className="p-5">
+                <h2>Editar Perfil</h2>
+                <Col md={4} className="">
                   <Form.Group controlId="formProfileName">
                     <Form.Label>Nome do Perfil</Form.Label>
                     <Form.Control
@@ -175,7 +191,9 @@ const ProfileCreatePage = () => {
                               className="m-2"
                               variant="primary"
                               size="sm"
-                              onClick={() => handleSelectAll(categoryPermissions)}
+                              onClick={() =>
+                                handleSelectAllCategory(categoryPermissions)
+                              }
                             >
                               Selecionar Todos
                             </Button>
@@ -183,53 +201,77 @@ const ProfileCreatePage = () => {
                               className="m-2"
                               variant="danger"
                               size="sm"
-                              onClick={() => handleClearAll(categoryPermissions)}
-                              >
-                                Limpar Seleção
-                              </Button>
-                            </div>
-                            <Form.Group>
-                              {categoryPermissions.map((p) => (
-                                <Form.Check
-                                  key={p.permission}
-                                  type="checkbox"
-                                  label={`${p.name} - ${p.description}`}
-                                  onChange={() =>
-                                    handlePermissionChange(p.permission)
-                                  }
-                                  checked={formData.selectedPermissions.includes(
-                                    p.permission
-                                  )}
-                                />
-                              ))}
-                            
-                            </Form.Group>
-                          </Card.Body>
-                        </Card>,
-                      ];
-                    }
-                    return acc;
-                  }, [])}
-                  {error && <p className="text-danger">{error}</p>}
-               
-              </Card>
-              <Button variant="primary" type="submit" disabled={loading}    style={{ position: "fixed", bottom: "50px", right: "20px", zIndex: "1000" }}
-      >
-                    {loading ? "Carregando..." : "Salvar"}
-                  </Button>
-                </Form>
+                              onClick={() =>
+                                handleClearAllCategory(categoryPermissions)
+                              }
+                            >
+                              Limpar Seleção
+                            </Button>
+                          </div>
+                          <Form.Group>
+                            {categoryPermissions.map((p) => (
+                              <Form.Check
+                                key={p.permission}
+                                type="checkbox"
+                                label={`${p.name} - ${p.description}`}
+                                onChange={() =>
+                                  handlePermissionChange(p.permission)
+                                }
+                                checked={formData.selectedPermissions.includes(
+                                  p.permission
+                                )}
+                              />
+                            ))}
+                          </Form.Group>
+                        </Card.Body>
+                      </Card>,
+                    ];
+                  }
+                  return acc;
+                }, [])}                {error && <p className="{text-danger}">{error}</p>}
+                </Card>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    position: "fixed",
+                    bottom: "50px",
+                    right: "20px",
+                    zIndex: "1000",
+                  }}
+                >
+                  {loading ? "Carregando..." : "Salvar"}
+                </Button>
+              </Form>
             </Col>
           </Row>
         </Container>
+        {/* Botão para listar */}
+        <Link to="/profile/list">
+          <Button
+            variant="secondary"
+            disabled={loading}
+            style={{
+              position: "fixed",
+              bottom: "50px",
+              right: "100px",
+              zIndex: "1000",
+            }}
+          >
+            {loading ? "Carregando..." : "Listar"}
+          </Button>
+        </Link>
         {/* Botão para selecionar todos os checkboxes de todas as categorias */}
         <Button
           variant="info"
           onClick={handleSelectAllCategories}
-<<<<<<< HEAD
-          style={{ position: "fixed", bottom: "150px", right: "20px", zIndex: "1000" }}
-=======
-          style={{ position: "fixed", bottom: "150px", right: "10px", zIndex: "1000" }}
->>>>>>> main
+          style={{
+            position: "fixed",
+            bottom: "150px",
+            right: "10px",
+            zIndex: "1000",
+          }}
         >
           Selecionar Todos
         </Button>
@@ -237,16 +279,15 @@ const ProfileCreatePage = () => {
         <Button
           variant="danger"
           onClick={handleClearAllCategories}
-<<<<<<< HEAD
-          style={{ position: "fixed", bottom: "100px", right: "20px", zIndex: "1000" }}
-=======
-          style={{ position: "fixed", bottom: "100px", right: "10px", zIndex: "1000" }}
->>>>>>> main
+          style={{
+            position: "fixed",
+            bottom: "100px",
+            right: "10px",
+            zIndex: "1000",
+          }}
         >
           Limpar Seleção
         </Button>
-      
-<<<<<<< HEAD
         {/* Alerta para exibir a mensagem da API */}
         {apiMessage && (
           <Alert
@@ -263,30 +304,15 @@ const ProfileCreatePage = () => {
             {apiMessage}
           </Alert>
         )}
-=======
-        <Link to="/profile/list">
-          <Button
-            variant="secondary"
-            disabled={loading}
-            style={{
-              position: "fixed",
-              bottom: "50px",
-              right: "100px",
-              zIndex: "1000",
-            }}
-          >
-            {loading ? "Carregando..." : "Listar"}
-          </Button>
-        </Link>
          <Alert variant="success" show={showSuccessAlert} onClose={() => setShowSuccessAlert(false)} dismissible style={{ position: "fixed", top: "10px", right: "10px", zIndex: "1050" }}>
        {apiMessage}
       </Alert>
          <Alert variant="danger" show={showErrorAlert} onClose={() => setShowErrorAlert(false)} dismissible style={{ position: "fixed", top: "10px", right: "10px", zIndex: "1050" }}>
          {apiMessage}
       </Alert>
->>>>>>> main
       </>
     );
   };
   
-  export default ProfileCreatePage;
+  export default ProfileUpdatePage;
+  
