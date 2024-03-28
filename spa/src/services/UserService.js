@@ -135,7 +135,9 @@ const userService = {
         "Erro ao obter o perfil do usuário. Por favor, tente novamente."
       );
     }
-  },view: async (userName) => {
+  },
+  
+  view: async (userName) => {
     try {
       const token = userService.getToken();
   
@@ -151,7 +153,7 @@ const userService = {
         headers,
       });
   
-      return response.data; // Não é necessário verificar response.status aqui
+      return response.data; 
   
     } catch (error) {
       console.error("Erro ao obter as informações do usuário:", error);

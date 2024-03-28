@@ -56,7 +56,7 @@ const Navigation = () => {
               <NavDropdown.Item as={Link} to="/profile/list">
                 Perfis
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/production/list">
+              <NavDropdown.Item as={Link} to="/production/admin/list">
                 Produções
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/event/list">
@@ -65,7 +65,7 @@ const Navigation = () => {
             </NavDropdown>
 
             <NavDropdown title="Corporativo" id="corporate-dropdown">
-              <NavDropdown.Item as={Link} to="/my-productions">
+              <NavDropdown.Item as={Link} to="/production/corp/list">
                 Minhas Produções
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/my-events">

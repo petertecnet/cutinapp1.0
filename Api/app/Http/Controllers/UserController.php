@@ -334,12 +334,6 @@ class UserController extends Controller
                 return response()->json(['error' => 'Usuário não autenticado.'], 401);
             }
     
-            // Verificar se o usuário tem permissão para visualizar o perfil do usuário
-            if (!$user->hasPermission('user_show')) {
-                Log::error('Usuário não tem permissão para visualizar este perfil de usuário.');
-                return response()->json(['error' => 'Você não tem permissão para visualizar este perfil de usuário.'], 403);
-            }
-    
             // Buscar o usuário pelo user_name
             $userToShow = User::with('productions')
             ->where('user_name', $userName)
