@@ -341,8 +341,11 @@ class UserController extends Controller
             }
     
             // Buscar o usuário pelo user_name
-            $userToShow = User::with('productions.events')->where('user_name', $userName)->first();
-    
+            $userToShow = User::with('productions')
+            ->where('user_name', $userName)
+            ->first();
+
+
             // Verificar se o usuário foi encontrado
             if (!$userToShow) {
                 return response()->json(['error' => 'Usuário não encontrado.'], 404);
