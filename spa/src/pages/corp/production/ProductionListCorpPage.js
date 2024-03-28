@@ -163,7 +163,7 @@ const ProductionListCorpPage = () => {
               zIndex: "1000",
             }}
           >
-            {loading ? "Loading..." : "Add"}
+           Add
           </Button>
         </Link>
       </Container>
