@@ -57,16 +57,16 @@ const Navigation = () => {
               Artistas
             </Nav.Link>
             <NavDropdown title="Administrativo" id="admin-dropdown">
-              <NavDropdown.Item as={Link} to="/user/list">
+              <NavDropdown.Item as={Link} to="/user/admin/list">
                 Usuários
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/profile/list">
+              <NavDropdown.Item as={Link} to="/profile/admin/list">
                 Perfis
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/production/admin/list">
                 Produções
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/event/list">
+              <NavDropdown.Item as={Link} to="/event/admin/list">
                 Eventos
               </NavDropdown.Item>
             </NavDropdown>

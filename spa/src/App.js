@@ -118,14 +118,14 @@ const App = () => {
 
         
         <Route path="/user/edit" element={protectedRoute(<UserEditPage />)} />
-        <Route path="/user/list" element={protectedRoute(<UserListPage />)} />
+        <Route path="/user/admin/list" element={protectedRoute(<UserListPage />)} />
         <Route path="/user/create" element={protectedRoute(<UserCreatePage />)} /> 
         <Route path="/user/:userName" element={protectedRoute(<UserViewPage />)}/>
 
 
-        <Route path="/profile/create" element={protectedRoute(<ProfileCreatePage />)} />
-        <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />
-        <Route path="/profile/update/:id" element={protectedRoute(<ProfileUpdatePage />)}/>
+        <Route path="/profile/admin/create" element={protectedRoute(<ProfileCreatePage />)} />
+        <Route path="/profile/admin/list" element={protectedRoute(<ProfileListPage />)} />
+        <Route path="/profile/admin/update/:id" element={protectedRoute(<ProfileUpdatePage />)}/>
         
         <Route path="/production/admin/list" element={protectedRoute(<ProductionListAdminPage />)} />
        
