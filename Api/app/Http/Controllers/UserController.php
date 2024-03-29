@@ -248,12 +248,18 @@ class UserController extends Controller
             $verificationCode = Str::random(6);
             // Gerar um código de verificação aleatório
             $password = Str::random(10);
+            $username = Str::slug($request->input('first_name')) . '-' . Str::random(4);
 
+            // Check if the generated username is unique, if not, generate a new one
+            while (User::where('user_name', $username)->exists()) {
+                $username = Str::slug($request->input('first_name')) . '-' . Str::random(4);
+            }
             // Criar o usuário
             $newUser = User::create([
                 'first_name' => $request->input('first_name'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($password),
+                'user_name' => $username,
                 'verification_code' => $verificationCode,
             ]);
 
