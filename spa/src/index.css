@@ -25,14 +25,10 @@ body {
 }
 
 .navbar {
-  background-image: linear-gradient(to right, #7c6594, #000); /* Degradê de #7c6594 para preto */
-  border-radius: 20px;
+  background-color: rgba(4, 83, 255, 0.1);
   backdrop-filter: blur(30px);
-  border: 2px solid #bd86f7;
-  margin: 30px;
+  border: 1px solid #bd86f7;
   padding: 10px;
-  transition: background-color 0.3s ease; /* Transição suave para mudanças de cor de fundo */
-  transform: translateY(0); 
 }
 
 .navbar .nav-link {
@@ -67,25 +63,24 @@ body {
 
 /* Estilo ao passar o mouse */
 .navbar-toggler:hover {
-  transform: scale(1.5); /* Aumenta ligeiramente o tamanho do ícone ao passar o mouse */
+  transform: scale(1.5); 
 }
 @keyframes blink {
   0% {
 
    
-  border: 3px solid rgb(255, 0, 0);
+  border: 1px solid rgb(255, 0, 0);
   }
 
   50% {
 
     
-  border: 3px solid rgb(255, 255, 255);
-  opacity: 0.5;
+  border: 1px solid rgb(255, 255, 255);
   }
 
   100% {
    
-  border: 3px solid rgb(255, 0, 0);
+  border: 1px solid rgb(255, 0, 0);
   }
 }
 
@@ -96,22 +91,19 @@ body {
   backdrop-filter: blur(5px);
   animation: blink 3s infinite;
   margin: 10px;
-  opacity: 0.8;
-}
-.img-production-logo {
-  position: absolute;
-  top: 75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .card img {
-  width: 100%; /* Garante que a imagem de fundo ocupe toda a largura do card */
-  height: auto; /* Mantém a proporção da imagem */
+  width: 100%; 
+  height: auto; 
 }
 
-.img-logo-production{
-  margin-left: 100%;
+.img-logo-production {
+  margin-left: 65%; /* Alterado para 50% para centralizar */
+  margin-top: -10%; /* Ajuste para uma posição mais adequada */
+  width: 30%; /* Definindo a largura da imagem em relação ao contêiner pai */
+  max-width: 150px; /* Limitando a largura máxima da imagem */
+  height: auto; /* Mantendo a proporção da altura de acordo com a largura */
 }
 
 .card-production{
@@ -159,24 +151,25 @@ body {
 }
 .auth-dropdown{
   margin-right: 5%;
-  border: 10px solid black;
   color:white;
 }
 
-/* Estilização da caixa de dropdown */
 .auth-dropdown .dropdown-menu {
-  left: -50%; /* Ajusta a posição da caixa de dropdown para a esquerda */
-  border: none; /* Remove a borda */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave */
-  background-image: linear-gradient(to right, #96e5f3, #f0f0f0); /* Define um degradê de cores claras */
+  left: -50%; 
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  background-image: linear-gradient(to right, #96e5f3, #f0f0f0); 
 }
 
-/* Estilização dos itens do dropdown */
-.auth-dropdown .dropdown-item {
-  color: #333; /* Define a cor do texto */
+
+.modal{
+
+
+  background-color: rgba(7, 9, 133, 0.2);
 }
 
-/* Estilização dos itens do dropdown quando estão sendo destacados */
-.auth-dropdown .dropdown-item:hover {
-  background-color: #f8f8f8; /* Define a cor de fundo quando o item é destacado */
+.modal-content{
+  border-radius: 10px;
+  color: white;
+  background-color: rgba(7, 9, 133);
 }

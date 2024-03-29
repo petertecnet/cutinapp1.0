@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import NavlogComponent from "../../components/NavlogComponent";
 import productionService from "../../services/ProductionService";
 import { storageUrl } from "../../config";
@@ -34,80 +34,82 @@ const ProductionViewPage = () => {
   return (
     <>
       <NavlogComponent />
+      {data.production.logo && (
+        <img
+          src={`${storageUrl}/${data.production.background}`}
+          alt="Preview da Logo"
+          className="img-fluid"
+        />
+      )}
+      {data.production.logo && (
+        <img
+          src={`${storageUrl}/${data.production.logo}`}
+          alt="Preview da Logo"
+          className="img-fluid rounded-circle img-logo-production"
+        />
+      )}
       <Container>
         <Row>
-          <Col md={12}>
-            <Card
-              style={{
-                backgroundImage: `url('${storageUrl}/${data.production.background}')`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundAttachment: "fixed",
-              }}
-            >
-              <Card className="card-production">
-                <div className="text-center rounded img-production-logo align-right">
-                  {data.production.logo && (
+          <Col md={4}>
+            <Card>
+              <Card.Text className="text-center text-uppercase h1">
+                {data.production.name}
+              </Card.Text>
+              <Card.Text className="text-center text-uppercase">
+                {data.production.establishment_type} |
+                <strong>
+                  
+                  {data.views} <i className="fa fa-eye" aria-hidden="true"></i>
+                </strong>
+                |
+                <strong>
+                  
+                  {data.production.city} {data.production.uf}
+                </strong>
+              </Card.Text>
+              <Card.Text className="text-center">
+                <a
+                  href={data.production.location}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="bi bi-geo-alt btn btn-outline-light"></i>
+                </a>
+                <a
+                  href={data.production.instagram_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="bi bi-instagram m-2 btn btn-outline-light"></i>
+                </a>
+              </Card.Text>
+
+              <Link
+                to={`/user/${data.production.user.user_name}`}
+                style={{ textDecoration: "none" }}
+              >
+                <div className="rounded-circle m-2">
+                  {data.production.user.avatar && (
                     <img
-                      src={`${storageUrl}/${data.production.logo}`}
-                      alt="Preview da Logo"
-                      className="img-fluid rounded-circle img-logo-production"
+                      src={`${storageUrl}/${data.production.user.avatar}`}
+                      alt={`${data.production.user.first_name} Produtor da produção ${data.production.name} da Logo`}
+                      className="rounded-circle"
+                      style={{ width: "50px", height: "50px" }}
                     />
                   )}
                 </div>
-                <Card.Text className="text-center h1">
-                  {data.production.name}
-                </Card.Text>
-                <Card.Text className="text-center">
-                  {data.production.establishment_type}
-                </Card.Text>
-                
-         
+              </Link>
 
-                <Card.Text>{data.views} Visualizações</Card.Text>
-                
-               
-                
-              </Card>
-              
-            </Card>
-          </Col>
-          <Col md={4}>
-            <Card>
-            <Card.Text className="text-center">
-  <Button variant="primary"  ahref={data.production.location} style={{ cursor: "pointer" }}>
-  <a href={data.production.location} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ cursor: "pointer" }}>
-  Ver localização desta produção no Google Maps
-</a>
-
-  </Button>
-</Card.Text>
-
-                <Link
-                  to={`/user/${data.production.user.user_name}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <div className="rounded-circle m-2">
-                    {data.production.user.avatar && (
-                      <img
-                        src={`${storageUrl}/${data.production.user.avatar}`}
-                        alt={`${data.production.user.first_name} Produtor da produção ${data.production.name} da Logo`}
-                        className="rounded-circle"
-                        style={{ width: "50px", height: "50px" }}
-                      />
-                    )}
-                  </div>
-                  
-                </Link>
-
-                
-              <Card.Text > <strong>Produtor: </strong>{data.production.user.first_name} </Card.Text>
               <Card.Text>
-                {data.production.city} {data.production.uf}
+                <i className="bi bi-file-earmark-person  m-2 "></i>
+                {data.production.user.first_name}
               </Card.Text>
-              <Card.Text>{data.production.address}</Card.Text>
-              <Card.Text>{data.production.instagram_url}</Card.Text>
+              <Card.Text>
+                <i className="bi bi-map m-2"></i>
+                {data.production.address}
+              </Card.Text>
               <Card.Text>{data.production.youtube_url}</Card.Text>
             </Card>
           </Col>

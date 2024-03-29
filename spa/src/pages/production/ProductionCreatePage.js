@@ -10,13 +10,15 @@ import {
 } from "react-bootstrap";
 import productionService from "../../services/ProductionService";
 import NavlogComponent from "../../components/NavlogComponent";
-import cepService from "../../services/CepService";
+import cepUtil from "../../utils/cep";
 import { Link } from "react-router-dom";
 import LoadingComponent from "../../components/LoadingComponent";
 
 const ProductionCreatePage = () => {
   const [formData, setFormData] = useState({
     name: "",
+    cnpj: "",
+    fantasy: "",
     type: "",
     phone: "",
     establishment_type: "",
@@ -67,10 +69,22 @@ const ProductionCreatePage = () => {
     // Preview da imagem
     const reader = new FileReader();
     reader.onloadend = () => {
-      setLogoPreview(reader.result);
+      // Redimensionar a imagem para 150x150
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 150;
+        canvas.height = 150;
+        ctx.drawImage(img, 0, 0, 150, 150);
+        const resizedDataURL = canvas.toDataURL("image/png");
+        setLogoPreview(resizedDataURL);
+      };
     };
     reader.readAsDataURL(file);
   };
+  
 
   const handleBackgroundChange = (e) => {
     const file = e.target.files[0];
@@ -81,7 +95,18 @@ const ProductionCreatePage = () => {
     // Preview da imagem
     const reader = new FileReader();
     reader.onloadend = () => {
-      setBackgroundPreview(reader.result);
+      // Redimensionar a imagem para 1920x600
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 1920;
+        canvas.height = 600;
+        ctx.drawImage(img, 0, 0, 1920, 600);
+        const resizedDataURL = canvas.toDataURL("image/png");
+        setBackgroundPreview(resizedDataURL);
+      };
     };
     reader.readAsDataURL(file);
   };
@@ -106,20 +131,42 @@ const ProductionCreatePage = () => {
   const handleCepChange = async (e) => {
     const cep = e.target.value;
     setFormData({ ...formData, cep: cep });
-      try {
-        const addressInfo = await cepService.getAddressInfo(cep);
-        if (addressInfo) {
-          setFormData({
-            ...formData,
-            uf: addressInfo.uf,
-            city: addressInfo.cidade,
-            cep: addressInfo.cep,
-            address: `${addressInfo.logradouro} - ${addressInfo.bairro}`,
-          });
-        }
-      } catch (error) {
-        console.error("Erro ao buscar informações do CEP:", error);
+    try {
+      const addressInfo = await cepUtil.getAddressInfo(cep);
+      if (addressInfo) {
+        setFormData({
+          ...formData,
+          uf: addressInfo.uf,
+          city: addressInfo.cidade,
+          cep: addressInfo.cep,
+          address: `${addressInfo.logradouro} - ${addressInfo.bairro}`,
+        });
       }
+    } catch (error) {
+      console.error("Erro ao buscar informações do CEP:", error);
+    }
+  };
+
+  const handleCnpjChange = async (e) => {
+    const cnpj = e.target.value;
+    setFormData({ ...formData, cnpj: cnpj });
+    try {
+      const companyInfo = await productionService.companyInfo(cnpj);
+      if (companyInfo && !companyInfo.error) {
+        setFormData((prevData) => ({
+          ...prevData,
+          fantasy: companyInfo.fantasy,
+          cep: companyInfo.cep,
+          address: `${companyInfo.logradouro} - ${companyInfo.bairro}`,
+          uf: companyInfo.uf,
+          city: companyInfo.municipio,
+        }));
+      } else {
+        console.error("Erro ao buscar informações do CNPJ:", companyInfo);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar informações do CNPJ:", error);
+    }
   };
 
   useEffect(() => {
@@ -139,38 +186,72 @@ const ProductionCreatePage = () => {
   return (
     <>
       <NavlogComponent />
+      <label
+        htmlFor="BackgroundInput"
+        style={{ cursor: "pointer", display: "block" }}
+      >
+        {backgroundPreview ? (
+          <img
+            src={backgroundPreview}
+            alt="Preview da Background"
+            className="img-fluid"
+          />
+        ) : (
+          <img
+            src="/images/productionbackground.png"
+            alt="Preview da Background"
+            className="img-fluid"
+          />
+        )}
+      </label>
+      <Form.Control
+        id="BackgroundInput"
+        type="file"
+        accept="image/*"
+        onChange={handleBackgroundChange}
+        style={{ display: "none" }}
+        required
+      />
+    <Form.Control
+        id="BackgroundInput"
+        type="file"
+        accept="image/*"
+        onChange={handleBackgroundChange}
+        style={{ display: "none" }}
+        required
+    />
+                  <label htmlFor="logoInput"   style={{ cursor: "pointer", display: "block" }}>
+                    {logoPreview ? (
+                      <img
+                        src={logoPreview}
+                        alt="Preview da Logo"
+                        className="img-fluid rounded-circle img-logo-production"
+                        // Ajusta a largura da imagem para preencher o container
+                      />
+                    ) : (
+                      <img
+                      src="/images/productionlogo.png"
+                      alt="Preview da Logo"
+                      className="img-fluid rounded-circle img-logo-production"
+                      // Ajusta a largura da imagem para preencher o container
+                    />    )}
+                  </label>
+                  <Form.Control
+                    id="logoInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    style={{
+                      display: "none"
+                    }}
+                    required
+                    className="img-fluid rounded-circle img-logo-production"
+                  />
+
       <Container>
         <Row className="justify-content-md-center">
           <Col md={4}>
             <Card>
-            <Form.Group controlId="formLogo">
-        <div className="text-center p-5  bg-secondary rounded">
-          <label htmlFor="logoInput" style={{ cursor: "pointer", display: "block" }}>
-            {logoPreview ? (
-              <img
-                src={logoPreview}
-                alt="Preview da Logo"
-                className="img-fluid rounded-circle"
-                style={{ maxWidth: "300px", height: "auto" }} // Ajusta a largura da imagem para preencher o container
-              />
-            ) : (
-              <i className="fas fa-camera fa-3x img-fluid rounded-circle"></i>
-            )}
-          </label>
-          <Form.Control
-            id="logoInput"
-            type="file"
-            accept="image/*"
-            onChange={handleLogoChange}
-            style={{ display: "none" }}
-            required
-            className="mt-3"
-          />
-        </div>
-        <Form.Text className="text-white text-center mt-2">
-          Faça upload da logo da produção (Resolução recomendada: 300x300)
-        </Form.Text>
-      </Form.Group>
 
               <Form.Group controlId="formName">
                 <Form.Control
@@ -219,6 +300,30 @@ const ProductionCreatePage = () => {
                   <option value="Karaoke">Karaoke</option>
                 </Form.Control>
               </Form.Group>
+              <Form.Group controlId="formcnpj">
+                <Form.Control
+                  type="text"
+                  name="cnpj"
+                  placeholder="CNPJ"
+                  value={formData.cnpj}
+                  onChange={handleCnpjChange}
+                  required
+                  className="mt-3"
+                />
+              </Form.Group>
+              <Form.Group controlId="formFantasy">
+                <Form.Control
+                  type="text"
+                  name="fantasy"
+                  placeholder="Nome fantasia"
+                  value={formData.fantasy}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-3"
+                  disabled
+                />
+              </Form.Group>
+
               <Form.Group controlId="formPhone">
                 <Form.Control
                   type="text"
@@ -244,40 +349,20 @@ const ProductionCreatePage = () => {
             </Card>
           </Col>
           <Col md={8}>
+         
             <Card>
               <Row>
-                <Col md={12}>
-                  <Form.Group controlId="formBackground">
-                    <div className="text-center p-5 bg-secondary ">
-                      <label
-                        htmlFor="BackgroundInput"
-                        style={{ cursor: "pointer", display: "block" }}
-                      >
-                        {backgroundPreview ? (
-                          <img
-                            src={backgroundPreview}
-                            alt="Preview da Background"
-                            className="img-fluid"
-                            style={{ maxWidth: "1920", height: "auto" }} // Ajusta a largura da imagem para preencher o container
-                          />
-                        ) : (
-                          <i className="fas fa-camera fa-3x"></i>
-                        )}
-                      </label>
-                      <Form.Control
-                        id="BackgroundInput"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleBackgroundChange}
-                        style={{ display: "none" }}
-                        required
-                        className="mt-3"
-                      />
-                    </div>
-                    <Form.Text className="text-white text-center mt-2">
-                      Selecione uma imagem de fundo (Resolução recomendada:
-                      1920x1080)
-                    </Form.Text>
+                <Col md={12} className="mt-2">
+                  <Form.Group controlId="formDescription">
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      name="description"
+                      placeholder="Digite a descrição da produção"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={4}>
@@ -302,6 +387,7 @@ const ProductionCreatePage = () => {
                       onChange={handleInputChange}
                       required
                       className="mt-3"
+                      disabled
                     >
                       <option value="">UF</option>
                       <option value="AC">AC</option>
@@ -344,7 +430,7 @@ const ProductionCreatePage = () => {
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="mt-3"
+                      className="mt-3" disabled
                     />
                   </Form.Group>
                 </Col>
@@ -400,21 +486,7 @@ const ProductionCreatePage = () => {
                   />
                 </Col>
               </Row>
-              <Row>
-                {/* Descrição */}
-                <Col md={12} className="mt-2">
-                  <Form.Group controlId="formDescription">
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      name="description"
-                      placeholder="Digite a descrição da produção"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
+              <Row>                
               </Row>
               <Button
                 variant="primary"

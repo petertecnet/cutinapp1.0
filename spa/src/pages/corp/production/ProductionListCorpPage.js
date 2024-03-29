@@ -5,7 +5,6 @@ import {
   Col,
   Container,
   Row,
-  Table,
   Modal,
   Alert,
 } from "react-bootstrap";
@@ -81,71 +80,59 @@ const ProductionListCorpPage = () => {
             <Card className="mt-5">
               <Card.Body>
                 <Card.Title>Suas produções</Card.Title>
-                <Table
-                  striped
-                  bordered
-                  hover
-                  className="table-dark text-white rounded"
-                >
-                  <thead>
-                    <tr>
-                      <th>Logo</th>
-                      <th>Produção</th>
-                      <th>Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {productions.map((production) => (
-                      <tr key={production.id}>
-                        <td className="text-center">
-                          <Link
-                            to={`/production/view/${production.slug}`}
-                            style={{ textDecoration: "none", color: "white" }}
-                          >
-                            <img
-                              src={
-                                production.logo
-                                  ? `${storageUrl}/${production.logo}`
-                                  : "/images/loadingimage.gif"
-                              }
-                              alt="User Avatar"
-                              className="avatar"
-                              style={{ maxWidth: "50px", borderRadius: "50%" }}
-                            />
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            to={`/production/view/${production.slug}`}
-                            style={{ textDecoration: "none", color: "white" }}
-                          >
-                            {production.name}
-                          </Link>
-                        </td>
-                        <td>
-                          <Button variant="info" size="sm" className="m-1">
-                            <Link
-                              to={`/production/update/${production.id}`}
-                              style={{ textDecoration: "none", color: "white" }}
-                            >
-                              Edit
-                            </Link>
-                          </Button>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            className="m-1"
-                            onClick={() =>
-                              handleShowConfirmModal(production.id)
-                            }
-                          >
-                            Delete
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                <Row>
+          {productions.map((production) => (
+            <Col key={production.id} md={12}>
+              <Card>
+              <Link
+                      to={`/production/view/${production.slug}`}
+                      style={{ textDecoration: "none", color: "white",  textTransform: "uppercase"  }}
+                    >
+                <Card.Title className="text-center bg-black  rounded-5 p-4">
+                  {production.name}
+                </Card.Title></Link>
+
+                <Row>
+                  <Col md={4}>
+                    <Link
+                      to={`/production/view/${production.slug}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Card.Img
+                        variant="top"
+                        src={`${storageUrl}/${production.logo}`}
+                        className="rounded-circle"
+                        style={{ width: "100px", height: "100px" }}
+                      />
+                    </Link>
+                  </Col>
+                  <Col md={8}>
+                    
+                    <Card.Body>
+                      <Button variant="info" size="sm" className="m-1">
+                        <Link
+                          to={`/production/update/${production.id}`}
+                          style={{ textDecoration: "none", color: "white" }}
+                        >
+                          Edit
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="m-1"
+                        onClick={() => handleShowConfirmModal(production.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Card.Body>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          ))}
+
+        </Row>
                 {loading && <p>Loading...</p>}
                 {error && <Alert variant="danger">{error}</Alert>}
               </Card.Body>
