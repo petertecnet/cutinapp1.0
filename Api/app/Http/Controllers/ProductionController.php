@@ -9,6 +9,7 @@ use App\Models\{Production,Event, Interaction};
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class ProductionController extends Controller
 {
@@ -50,6 +51,8 @@ class ProductionController extends Controller
             // Criar a nova produção
             $production = Production::create([
                 'name' => $request->input('name'),
+                'cnpj' => $request->input('cnpj'),
+                'fantasy' => $request->input('fantasy'),
                 'type' => $request->input('type'),
                 'phone' => $request->input('phone'),
                 'establishment_type' => $request->input('establishment_type'),
@@ -80,7 +83,7 @@ class ProductionController extends Controller
             if ($request->hasFile('logo')) {
                 $imageLogoPath = $request->file('logo')->store('public/productions');
                 $image = Image::make(storage_path('app/' . $imageLogoPath));
-                $image->fit(300, 300);
+                $image->fit(150, 150);
                 $image->save();
 
                 $production->logo = str_replace('public/', '', $imageLogoPath);
@@ -89,7 +92,7 @@ class ProductionController extends Controller
             if ($request->hasFile('background')) {
                 $imageBackgroundPath = $request->file('background')->store('public/productions');
                 $image = Image::make(storage_path('app/' . $imageBackgroundPath));
-                $image->fit(1920, 1080);
+                $image->fit(1920, 600);
                 $image->save();
 
                 $production->background = str_replace('public/', '', $imageBackgroundPath);
@@ -122,14 +125,25 @@ class ProductionController extends Controller
             $production = Production::findOrFail($id);
     
             // Verificar se o usuário tem permissão para atualizar a produção
-            if (!Auth::user()->hasPermission('production_update')) {
+           
+            if ($production->user_id === auth()->user()->id) {
+                // Se for o fundador, ele pode atualizar independentemente da permissão
+                $canUpdate = true;
+            } else {
+                // Se não for o fundador, verifique se ele tem permissão para atualizar produções
+                $canUpdate = Auth::user()->hasPermission('production_update');
+            }
+    
+            // Se não tiver permissão para atualizar e não for o fundador, retorne erro
+            if (!$canUpdate) {
                 Log::error('Usuário não tem permissão para atualizar esta produção.');
                 return response()->json(['error' => 'Você não tem permissão para atualizar esta produção.'], 403);
             }
-    
             // Atualizar os campos da produção
             $production->update([
                 'name' => $request->input('name', $production->name),
+                'cnpj' => $request->input('cnpj', $production->cnpj),
+                'fantasy' => $request->input('fantasy', $production->fantasy),
                 'type' => $request->input('type', $production->type),
                 'phone' => $request->input('phone', $production->phone),
                 'establishment_type' => $request->input('establishment_type', $production->establishment_type),
@@ -160,7 +174,7 @@ class ProductionController extends Controller
             if ($request->hasFile('logo')) {
                 $imageLogoPath = $request->file('logo')->store('public/productions');
                 $image = Image::make(storage_path('app/' . $imageLogoPath));
-                $image->fit(300, 300);
+                $image->fit(150, 150);
                 $image->save();
     
                 // Excluir a imagem anterior, se existir
@@ -174,7 +188,7 @@ class ProductionController extends Controller
             if ($request->hasFile('background')) {
                 $imageBackgroundPath = $request->file('background')->store('public/productions');
                 $image = Image::make(storage_path('app/' . $imageBackgroundPath));
-                $image->fit(1920, 1080);
+                $image->fit(1920, 600);
                 $image->save();
     
                 // Excluir a imagem anterior, se existir
@@ -214,7 +228,7 @@ class ProductionController extends Controller
         return response()->json(['production' => $production], 200);
     } catch (\Exception $e) {
         // Em caso de erro, retornar uma mensagem de erro em formato JSON
-        return response()->json(['error' => 'Ocorreu um erro ao obter os detalhes da produção.'], 500);
+        return response()->json(['error' => 'Ocorreu um erro ao obter os detalhes da produção.', $e->getMessage()], 500);
     }
 }
 public function view($slug)
@@ -299,7 +313,10 @@ public function delete($id)
             Log::error('Usuário não tem permissão para excluir esta produção.');
             return response()->json(['error' => 'Você não tem permissão para excluir esta produção.'], 403);
         }
-
+        if ($production->user_id !== auth()->user()->id) {
+            Log::error('Usuário não tem permissão para atualizar esta produção.');
+            return response()->json(['error' => 'Você não é o fundador desta produção.'], 403);
+        }
         // Excluir a produção
         $production->delete();
 
@@ -310,5 +327,29 @@ public function delete($id)
         return response()->json(['error' => 'Ocorreu um erro ao excluir a produção.'], 500);
     }
 }
+
+public function getCompanyInfo(Request $request)
+{
+    try {
+        $cnpj = $request->input('cnpj');
+        $response = Http::get("https://www.receitaws.com.br/v1/cnpj/$cnpj");
+
+        // Verifica se a requisição foi bem-sucedida
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            // Log da resposta da requisição caso não seja bem-sucedida
+            \Log::error('Erro ao obter informações da empresa: else ' . $response->json());
+            // Se a requisição não foi bem-sucedida, retorna uma mensagem de erro
+            return response()->json(['error' => 'Erro ao obter informações da empresa try'], $response->status());
+        }
+    } catch (\Exception $e) {
+        // Em caso de exceção, retorna uma mensagem de erro
+        \Log::error('Erro ao obter informações da empresa: ' . $e->getMessage());
+        return response()->json(['error' => 'Erro ao obter informações da empresa catch'], 500);
+    }
+}
+
+
 
 }

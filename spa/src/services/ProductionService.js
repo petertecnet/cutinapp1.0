@@ -127,6 +127,26 @@ const productionService = {
       }
     }
   },
+
+  companyInfo: async (cnpj) => {
+    try {
+      const response = await axios.get(`${apiBaseUrl}/${apiServiceUrl}/get-company-info`, {
+        headers: {
+          Authorization: `Bearer ${productionService.getToken()}`,
+        },
+        params: {
+          cnpj: cnpj, // Passando o CNPJ como parâmetro
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        return error.response.data.error;
+      } else {
+        return "Erro ao se conectar ao servidor.";
+      }
+    }
+  },
 };
 
 export default productionService;

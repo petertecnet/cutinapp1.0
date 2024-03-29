@@ -5,6 +5,7 @@ import NavlogComponent from "../../components/NavlogComponent";
 import userService from "../../services/UserService";
 import LoadingComponent from "../../components/LoadingComponent";
 import { storageUrl } from "../../config";
+import { Link } from "react-router-dom";
 
 const UserViewPage = () => {
   const { userName } = useParams();
@@ -117,6 +118,27 @@ const UserViewPage = () => {
                 </Card>
               </Col>
             </Row>
+            <Row>
+          {user.productions.map((production) => (
+            <Col key={production.id} md={4}>
+              <Link
+                to={`/production/view/${production.slug}`}
+                style={{ textDecoration: "none" }}
+              >
+                 <Card>
+                <Card.Img
+                  variant="top"
+                  src={`${storageUrl}/${production.logo}`}
+                  className="rounded-circle"
+                />
+                <Card.Body>
+                  <Card.Title>{production.name}</Card.Title>
+                </Card.Body>
+              </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
           </Col>
         </Row>
       </Container>

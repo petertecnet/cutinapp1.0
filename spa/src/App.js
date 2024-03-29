@@ -28,7 +28,9 @@ import ProfileUpdatePage from "./pages/admin/profile/ProfileUpdatePage";
 import ProductionListAdminPage from "./pages/admin/production/ProductionListAdminPage";
 
 // Corporativo
+//Production
 import ProductionUpdatePage  from "./pages/production/ProductionUpdatePage";
+import ProductionListCorpPage from "./pages/corp/production/ProductionListCorpPage";
 
 //Participativo
 //Production
@@ -104,6 +106,7 @@ const App = () => {
     <Router>
       
       <Routes>
+        
         <Route path="/register" element={restrictedRoute(<RegisterPage />)} />
         <Route path="/login" element={restrictedRoute(<LoginPage />)} />
         <Route path="/password-email" element={restrictedRoute(<PasswordEmailPage />)}/>
@@ -124,7 +127,7 @@ const App = () => {
         <Route path="/profile/list" element={protectedRoute(<ProfileListPage />)} />
         <Route path="/profile/update/:id" element={protectedRoute(<ProfileUpdatePage />)}/>
         
-        <Route path="/production/list" element={protectedRoute(<ProductionListAdminPage />)} />
+        <Route path="/production/admin/list" element={protectedRoute(<ProductionListAdminPage />)} />
        
 
         <Route path="/production/create" element={protectedRoute(<ProductionCreatePage />)} />
@@ -132,7 +135,8 @@ const App = () => {
         <Route path="/production/update/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
         <Route path="/production/show/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
         <Route path="/production/view/:slug" element={protectedRoute(<ProductionViewPage />)}/>
-      
+        <Route path="/production/corp/list" element={protectedRoute(<ProductionListCorpPage />)} />
+       
        
 
       </Routes>

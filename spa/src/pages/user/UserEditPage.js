@@ -14,7 +14,7 @@ import userService from "../../services/UserService";
 import NavlogComponent from "../../components/NavlogComponent";
 import LoadingComponent from "../../components/LoadingComponent";
 import { storageUrl } from "../../config";
-import cepService from "../../services/CepService";
+import cepService from "../../utils/cep";
 
 const UserEditPage = () => {
   const [user, setUser] = useState(null);
