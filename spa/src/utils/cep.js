@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const cepService = {
+const cep = {
   // Função para consultar o CEP e obter informações de endereço
   getAddressInfo: async (cep) => {
     try {
@@ -14,4 +14,4 @@ const cepService = {
   }
 };
 
-export default cepService;
+export default cep;

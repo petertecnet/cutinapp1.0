@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import productionService from "../../services/ProductionService";
 import NavlogComponent from "../../components/NavlogComponent";
-import cepService from "../../services/CepService";
+import cepService from "../../utils/cep";
 import { Link, useParams } from "react-router-dom";
 import { storageUrl } from "../../config";
 import LoadingComponent from "../../components/LoadingComponent";

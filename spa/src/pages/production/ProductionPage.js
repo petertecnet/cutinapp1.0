@@ -26,6 +26,9 @@ const ProductionPage = () => {
     <NavlogComponent />
       <Container>
         <h1>Productions</h1>
+        
+          
+        <Card>
         <Row>
           {productions.map((production) => (
             <Col key={production.id} md={4}>
@@ -47,6 +50,7 @@ const ProductionPage = () => {
             </Col>
           ))}
         </Row>
+          </Card>
       </Container>
     </div>
   );

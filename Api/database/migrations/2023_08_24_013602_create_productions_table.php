@@ -11,6 +11,8 @@ class CreateProductionsTable extends Migration
         Schema::create('productions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('fantasy');
+            $table->string('cnpj');
             $table->string('type')->nullable();
             $table->string('slug')->nullable();
             $table->string('establishment_type')->nullable();
