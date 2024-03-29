@@ -248,12 +248,18 @@ class UserController extends Controller
             $verificationCode = Str::random(6);
             // Gerar um código de verificação aleatório
             $password = Str::random(10);
+            $username = Str::slug($request->input('first_name')) . '-' . Str::random(4);
 
+            // Check if the generated username is unique, if not, generate a new one
+            while (User::where('user_name', $username)->exists()) {
+                $username = Str::slug($request->input('first_name')) . '-' . Str::random(4);
+            }
             // Criar o usuário
             $newUser = User::create([
                 'first_name' => $request->input('first_name'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($password),
+                'user_name' => $username,
                 'verification_code' => $verificationCode,
             ]);
 
@@ -332,12 +338,6 @@ class UserController extends Controller
             if (!$user) {
                 Log::error('Usuário não autenticado.');
                 return response()->json(['error' => 'Usuário não autenticado.'], 401);
-            }
-    
-            // Verificar se o usuário tem permissão para visualizar o perfil do usuário
-            if (!$user->hasPermission('user_show')) {
-                Log::error('Usuário não tem permissão para visualizar este perfil de usuário.');
-                return response()->json(['error' => 'Você não tem permissão para visualizar este perfil de usuário.'], 403);
             }
     
             // Buscar o usuário pelo user_name
