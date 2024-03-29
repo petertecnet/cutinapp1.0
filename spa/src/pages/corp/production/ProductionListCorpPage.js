@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; // Adicionando importação dos hooks
 import {
   Button,
   Card,
@@ -12,11 +12,12 @@ import { Link } from "react-router-dom";
 import productionService from "../../../services/ProductionService";
 import NavlogComponent from "../../../components/NavlogComponent";
 import { storageUrl } from "../../../config";
+import authService from "../../../services/AuthService";
+import userService from "../../../services/UserService";
 
-const ProductionListAdminPage = () => {
+const ProductionListCorpPage = () => {
   const [productions, setProductions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedProductionId, setSelectedProductionId] = useState(null);
@@ -27,11 +28,18 @@ const ProductionListAdminPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const fetchedProductions = await productionService.list();
-      setProductions(fetchedProductions);
+      const userData = await authService.me();
+      console.log(userData.user_name);
+      const response = await userService.view(userData.user_name);
+      if (response.user && response.user.productions) {
+        // Verifica se response.user e response.user.productions não são undefined
+        setProductions(response.user.productions);
+      } else {
+        setError("Nenhuma produção encontrada para este usuário.");
+      }
     } catch (error) {
-      console.error("Error fetching productions:", error);
-      setError("Error fetching productions. Please try again.");
+      console.log(error);
+      setError("Erro ao buscar as produções do usuário.");
     } finally {
       setLoading(false);
     }
@@ -43,16 +51,11 @@ const ProductionListAdminPage = () => {
 
   const handleDeleteProduction = async (id) => {
     try {
-     const response = await productionService.delete(id);
-     console.log(response)
-     setMessage(response);
+      await productionService.delete(id);
       fetchProductions();
       setShowSuccessAlert(true);
       setTimeout(() => setShowSuccessAlert(false), 5000);
     } catch (error) {
-      console.log(error);    
-      setMessage(error);
-      console.error("Error deleting production:", error);
       setShowErrorAlert(true);
       setTimeout(() => setShowErrorAlert(false), 5000);
     }
@@ -72,7 +75,12 @@ const ProductionListAdminPage = () => {
     <>
       <NavlogComponent />
       <Container>
-        <Row>
+        <Row className="justify-content-md-center">
+          <Col md={12} className="mt-5">
+            <Card className="mt-5">
+              <Card.Body>
+                <Card.Title>Suas produções</Card.Title>
+                <Row>
           {productions.map((production) => (
             <Col key={production.id} md={12}>
               <Card>
@@ -99,21 +107,7 @@ const ProductionListAdminPage = () => {
                     </Link>
                   </Col>
                   <Col md={8}>
-                    <strong className="m-2">Produzido por:</strong>
-                    <Link
-                      to={`/user/${production.user.user_name}`}
-                      style={{ textDecoration: "none", color: "white" }}
-                    >
-                      {production.user.avatar && (
-                        <img
-                          src={`${storageUrl}/${production.user.avatar}`}
-                          alt={`${production.user.first_name} Produtor da produção ${production.name} da Logo`}
-                          className="rounded-circle m-2"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      )}
-                      {production.user.first_name}
-                    </Link>
+                    
                     <Card.Body>
                       <Button variant="info" size="sm" className="m-1">
                         <Link
@@ -138,8 +132,12 @@ const ProductionListAdminPage = () => {
             </Col>
           ))}
 
-          {loading && <p>Loading...</p>}
-          {error && <Alert variant="danger">{error}</Alert>}
+        </Row>
+                {loading && <p>Loading...</p>}
+                {error && <Alert variant="danger">{error}</Alert>}
+              </Card.Body>
+            </Card>
+          </Col>
         </Row>
         <Link to="/production/create">
           <Button
@@ -163,10 +161,10 @@ const ProductionListAdminPage = () => {
         onHide={handleCloseModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar exclusão </Modal.Title>
+          <Modal.Title>Confirmar exclusão</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Deseja excluir essa produção? Isso sera inrreversivel
+          Deseja excluir essa produção? Isso será irreversível.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
@@ -196,7 +194,7 @@ const ProductionListAdminPage = () => {
           zIndex: "1050",
         }}
       >
-       {message}
+        Produção deletada com sucesso
       </Alert>
 
       <Alert
@@ -211,10 +209,10 @@ const ProductionListAdminPage = () => {
           zIndex: "1050",
         }}
       >
-        {message}
+        Não foi possível deletar produção
       </Alert>
     </>
   );
 };
 
-export default ProductionListAdminPage;
+export default ProductionListCorpPage;

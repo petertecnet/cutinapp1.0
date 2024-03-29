@@ -26,20 +26,27 @@ const Navigation = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <Navbar expand="lg" sticky="top" bg="dark" variant="dark">
+    <Navbar expand="lg" sticky="top" collapseOnSelect>
       <Container>
-        <Navbar.Brand as={Link} to="/">
+        <Navbar.Brand as={Link} to="/" onClick={closeMenu}>
           <img
-            src="/images/loadingimage.gif"
+            src="/images/logo.png"
             alt="Logo"
-            className="logo rounded-circle img-thumbnail"
+            className="rounded-circle"
             style={{ width: "50px", height: "50px" }}
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarNav" onClick={toggleMenu} />
-        <Navbar.Collapse id="navbarNav" className={`${isMenuOpen ? "show" : ""}`}>
-          <Nav className="me-auto">
+        <Navbar.Collapse
+          id="navbarNav"
+          className={`${isMenuOpen ? "show" : ""}`}
+        >
+          <Nav className="me-auto" onClick={closeMenu}>
             <Nav.Link as={Link} to="/events">
               Eventos
             </Nav.Link>
@@ -56,7 +63,7 @@ const Navigation = () => {
               <NavDropdown.Item as={Link} to="/profile/list">
                 Perfis
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/production/list">
+              <NavDropdown.Item as={Link} to="/production/admin/list">
                 Produções
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/event/list">
@@ -65,7 +72,7 @@ const Navigation = () => {
             </NavDropdown>
 
             <NavDropdown title="Corporativo" id="corporate-dropdown">
-              <NavDropdown.Item as={Link} to="/my-productions">
+              <NavDropdown.Item as={Link} to="/production/corp/list">
                 Minhas Produções
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/my-events">
@@ -75,33 +82,43 @@ const Navigation = () => {
                 Minhas Vendas
               </NavDropdown.Item>
             </NavDropdown>
-          </Nav>   {user && (
+          </Nav>
+          <Nav>
+            {user && (
+              <NavDropdown
+                title={user.first_name}
+                id="profile-dropdown"
+                className="text-white dropstart h5"
+              >
+                <NavDropdown.Item
+                  as={Link}
+                  to={`/user/edit`}
+                  onClick={closeMenu}
+                >
+                  Gerenciar conta
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/profile" onClick={closeMenu}>
+                  Minha Carteira
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/settings" onClick={closeMenu}>
+                  Configurações
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/logout" onClick={closeMenu}>
+                  Sair
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
             <img
-              src={user.avatar ? `${storageUrl}/${user.avatar}` : "/images/loadingimage.gif"}
+              src={
+                user && user.avatar
+                  ? `${storageUrl}/${user.avatar}`
+                  : "/images/loadingimage.gif"
+              }
               alt="Avatar"
-              className="avatar text-center"
+              className="avatar m-2"
               style={{ maxWidth: "40px", borderRadius: "40%" }}
             />
-          )}
-          {user && (
-            
-            <NavDropdown title={user.first_name} id="profile-dropdown" className=" text-white auth-dropdown">
-             
-              <NavDropdown.Item as={Link} to={`/user/edit`}>
-              Gerenciar conta
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/profile">
-                Minha Carteira
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/settings">
-                Configurações
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/logout">
-                Sair
-              </NavDropdown.Item>
-            </NavDropdown>
-          )}
-        
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
