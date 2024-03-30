@@ -56,32 +56,36 @@ const Navigation = () => {
             <Nav.Link as={Link} to="/artists">
               Artistas
             </Nav.Link>
-            <NavDropdown title="Administrativo" id="admin-dropdown">
-              <NavDropdown.Item as={Link} to="/user/list">
-                Usuários
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/profile/list">
-                Perfis
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/production/admin/list">
-                Produções
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/event/list">
-                Eventos
-              </NavDropdown.Item>
-            </NavDropdown>
+            {user && user.profile && user.profile.name === 'Administrador' && (
+              <NavDropdown title={<span><i className="fa fa-cogs" aria-hidden="true"></i> Administrativo</span>} id="admin-dropdown">
+                <NavDropdown.Item as={Link} to="/user/list">
+                  Usuários
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/profile/list">
+                  Perfis
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/production/admin/list">
+                  Produções
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/event/list">
+                  Eventos
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
 
-            <NavDropdown title="Corporativo" id="corporate-dropdown">
-              <NavDropdown.Item as={Link} to="/production/corp/list">
-                Minhas Produções
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/my-events">
-                Meus Eventos
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/my-sales">
-                Minhas Vendas
-              </NavDropdown.Item>
-            </NavDropdown>
+            {user && user.profile && (user.profile.name === 'Produtor' || user.profile.name === 'Administrador') && (
+             <NavDropdown title={<span><i className="fa fa-briefcase" aria-hidden="true"></i> Corporativo</span>} id="corporate-dropdown">
+                <NavDropdown.Item as={Link} to="/production/corp/list">
+                  Minhas Produções
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/my-events">
+                  Meus Eventos
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/my-sales">
+                  Minhas Vendas
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
           </Nav>
           <Nav>
             {user && (

@@ -367,7 +367,9 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json( User::with('profile')
+        ->where('user_name', Auth::user()->user_name)
+        ->first());
     }
 
     /**
