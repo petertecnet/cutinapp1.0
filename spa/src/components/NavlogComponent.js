@@ -35,7 +35,7 @@ const Navigation = () => {
       <Container>
         <Navbar.Brand as={Link} to="/" onClick={closeMenu}>
           <img
-            src="/images/logo.png"
+            src="/images/loadingimage.gif"
             alt="Logo"
             className="rounded-circle"
             style={{ width: "50px", height: "50px" }}

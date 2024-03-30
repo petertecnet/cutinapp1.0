@@ -60,7 +60,7 @@ class LoginPage extends Component {
                     src="/images/loadingimage.gif"
                     alt="Logo"
                     className="logo rounded-circle img-thumbnail"
-                    style={{ width: "150px", height: "150px" }}
+                    style={{ width: "170px", height: "170px" }}
                   />
                 </div>
                 <Card.Title className="text-center m-4">LOGIN</Card.Title>
