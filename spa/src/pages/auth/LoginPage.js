@@ -57,7 +57,7 @@ class LoginPage extends Component {
                   {" "}
                   {/* Div para centralizar o conteúdo */}
                   <img
-                    src="/images/loadingimage.gif"
+                    src="/images/logo.png"
                     alt="Logo"
                     className="logo rounded-circle img-thumbnail"
                     style={{ width: "170px", height: "170px" }}

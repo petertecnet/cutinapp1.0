@@ -73,6 +73,8 @@ const ProductionListAdminPage = () => {
       <NavlogComponent />
       <Container>
         <Row>
+          
+        <p className="labeltitle h2 text-center text-uppercase">Produções do sistema</p>
           {productions.map((production) => (
             <Col key={production.id} md={12}>
               <Card>
@@ -87,7 +89,7 @@ const ProductionListAdminPage = () => {
                 <Row>
                   <Col md={4}>
                     <Link
-                      to={`/production/view/${production.slug}`}
+                      to={`/production/${production.slug}`}
                       style={{ textDecoration: "none" }}
                     >
                       <Card.Img
@@ -99,7 +101,7 @@ const ProductionListAdminPage = () => {
                     </Link>
                   </Col>
                   <Col md={8}>
-                    <strong className="m-2">Produzido por:</strong>
+                    <strong className="m-2">Fundada por:</strong>
                     <Link
                       to={`/user/${production.user.user_name}`}
                       style={{ textDecoration: "none", color: "white" }}
@@ -120,7 +122,8 @@ const ProductionListAdminPage = () => {
                           to={`/production/update/${production.id}`}
                           style={{ textDecoration: "none", color: "white" }}
                         >
-                          Edit
+                          
+        <i className="bi bi-pencil-square  m-2 "></i>
                         </Link>
                       </Button>
                       <Button
@@ -129,7 +132,8 @@ const ProductionListAdminPage = () => {
                         className="m-1"
                         onClick={() => handleShowConfirmModal(production.id)}
                       >
-                        Delete
+                        
+        <i className="bi bi-trash  m-2 "></i>
                       </Button>
                     </Card.Body>
                   </Col>
@@ -166,11 +170,11 @@ const ProductionListAdminPage = () => {
           <Modal.Title>Confirmar exclusão </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Deseja excluir essa produção? Isso sera inrreversivel
+          Deseja excluir essa produção? Isso sera inreverssível 
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="danger"
@@ -179,7 +183,7 @@ const ProductionListAdminPage = () => {
               handleCloseModal();
             }}
           >
-            Delete
+            Confirmar exclusão
           </Button>
         </Modal.Footer>
       </Modal>
@@ -189,12 +193,7 @@ const ProductionListAdminPage = () => {
         show={showSuccessAlert}
         onClose={() => setShowSuccessAlert(false)}
         dismissible
-        style={{
-          position: "fixed",
-          top: "10px",
-          right: "10px",
-          zIndex: "1050",
-        }}
+      
       >
        {message}
       </Alert>
@@ -204,12 +203,7 @@ const ProductionListAdminPage = () => {
         show={showErrorAlert}
         onClose={() => setShowErrorAlert(false)}
         dismissible
-        style={{
-          position: "fixed",
-          top: "10px",
-          right: "10px",
-          zIndex: "1050",
-        }}
+   
       >
         {message}
       </Alert>

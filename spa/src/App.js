@@ -134,7 +134,7 @@ const App = () => {
         <Route path="/productions" element={protectedRoute(<ProductionListPage />)} /> 
         <Route path="/production/update/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
         <Route path="/production/show/:id" element={protectedRoute(<ProductionUpdatePage />)}/>
-        <Route path="/production/view/:slug" element={protectedRoute(<ProductionViewPage />)}/>
+        <Route path="/production/:slug" element={protectedRoute(<ProductionViewPage />)}/>
         <Route path="/production/corp/list" element={protectedRoute(<ProductionListCorpPage />)} />
        
        
