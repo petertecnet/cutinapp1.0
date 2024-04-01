@@ -14,38 +14,12 @@ import cepService from "../../utils/cep";
 import { Link, useParams } from "react-router-dom";
 import { storageUrl } from "../../config";
 import LoadingComponent from "../../components/LoadingComponent";
+import seguiments from "../../utils/seguiments";
 
 const ProductionUpdatePage = () => {
   const { id } = useParams(); // Obter o ID da produção da URL
   const [formData, setFormData] = useState({
-    // Estado inicial dos dados do formulário
-    name: "",
-    phone: "",
-    type: "",
-    establishment_type: "",
-    description: "",
-    segments: [],
-    city: "",
-    location: "",
-    cep: "",
-    address: "",
-    user_id: "",
-    is_featured: false,
-    is_published: false,
-    is_approved: false,
-    is_cancelled: false,
-    additional_info: "",
-    facebook_url: "",
-    twitter_url: "",
-    instagram_url: "",
-    youtube_url: "",
-    other_information: "",
-    ticket_price_min: 0,
-    ticket_price_max: 0,
-    total_tickets_sold: 0,
-    total_tickets_available: 0,
-    logo: null,
-    background: null,
+    segments: [], // Initialize segments with an empty array
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -56,9 +30,8 @@ const ProductionUpdatePage = () => {
   useEffect(() => {
     const fetchProduction = async () => {
       try {
-        const production = await productionService.show(id); // Utilizar a função show para obter os detalhes da produção
+        const production = await productionService.show(id);
         setFormData(production);
-        // Set logo preview if logo exists
         if (production.logo) {
           setLogoPreview(`${storageUrl}/${production.logo}`);
         }
@@ -81,7 +54,6 @@ const ProductionUpdatePage = () => {
     });
   };
 
-  // Função para lidar com a alteração do logo
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     setFormData({
@@ -91,12 +63,23 @@ const ProductionUpdatePage = () => {
     // Preview da imagem
     const reader = new FileReader();
     reader.onloadend = () => {
-      setLogoPreview(reader.result);
+      // Redimensionar a imagem para 150x150
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 150;
+        canvas.height = 150;
+        ctx.drawImage(img, 0, 0, 150, 150);
+        const resizedDataURL = canvas.toDataURL("image/png");
+        setLogoPreview(resizedDataURL);
+      };
     };
     reader.readAsDataURL(file);
   };
 
-  // Função para lidar com a alteração do background
+
   const handleBackgroundChange = (e) => {
     const file = e.target.files[0];
     setFormData({
@@ -106,12 +89,22 @@ const ProductionUpdatePage = () => {
     // Preview da imagem
     const reader = new FileReader();
     reader.onloadend = () => {
-      setBackgroundPreview(reader.result);
+      // Redimensionar a imagem para 1920x600
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 1920;
+        canvas.height = 600;
+        ctx.drawImage(img, 0, 0, 1920, 600);
+        const resizedDataURL = canvas.toDataURL("image/png");
+        setBackgroundPreview(resizedDataURL);
+      };
     };
     reader.readAsDataURL(file);
   };
 
-  // Função para lidar com o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -119,9 +112,9 @@ const ProductionUpdatePage = () => {
     setSuccessMessage(null);
 
     try {
-      const response = await productionService.update(id, formData); // Chamar o método de atualização do serviço
+      const response = await productionService.update(id, formData);
       setSuccessMessage(response);
-      setTimeout(() => setSuccessMessage(null), 5000); // Limpar a mensagem de sucesso após 5 segundos
+      setTimeout(() => setSuccessMessage(null), 5000);
     } catch (error) {
       setError("Erro ao atualizar a produção. Por favor, tente novamente.");
     } finally {
@@ -129,7 +122,6 @@ const ProductionUpdatePage = () => {
     }
   };
 
-  // Função para lidar com a alteração do CEP
   const handleCepChange = async (e) => {
     const cep = e.target.value;
     setFormData({ ...formData, cep });
@@ -150,7 +142,6 @@ const ProductionUpdatePage = () => {
     }
   };
 
-  // Efeito para limpar mensagens de erro ou sucesso após 5 segundos
   useEffect(() => {
     let timer;
     if (error || successMessage) {
@@ -166,301 +157,363 @@ const ProductionUpdatePage = () => {
   if (loading) {
     return <LoadingComponent />;
   }
+
+  const handleSeguimentsChange = (seguimentId) => {
+    // Check if formData and segments are not null before accessing
+    const updatedSegments =
+      formData && formData.segments
+        ? formData.segments.includes(seguimentId)
+          ? formData.segments.filter((id) => id !== seguimentId)
+          : [...formData.segments, seguimentId]
+        : [seguimentId];
+    setFormData({ ...formData, segments: updatedSegments });
+  };
+
+  const segmentsPerColumn = 6;
+  const segmentChunks = Array.from(
+    { length: Math.ceil(Object.keys(seguiments).length / segmentsPerColumn) },
+    (_, index) =>
+      Object.entries(seguiments).slice(
+        index * segmentsPerColumn,
+        index * segmentsPerColumn + segmentsPerColumn
+      )
+  );
+
   return (
     <>
-      <NavlogComponent />
+      <NavlogComponent />  <label
+        htmlFor="BackgroundInput"
+        style={{ cursor: "pointer", display: "block" }}
+      >
+        {backgroundPreview ? (
+          <img
+            src={backgroundPreview}
+            alt="Preview da Background"
+            className="img-fluid"
+          />
+        ) : (
+          <img
+            src="/images/productionbackground.png"
+            alt="Preview da Background"
+            className="img-fluid"
+          />
+        )}
+      </label>
+      <Form.Control
+        id="BackgroundInput"
+        type="file"
+        accept="image/*"
+        onChange={handleBackgroundChange}
+        style={{ display: "none" }}
+        required
+      />
+      
+      <label
+        htmlFor="logoInput"
+        style={{ cursor: "pointer", display: "block" }}
+      >
+        {logoPreview ? (
+          <img
+            src={logoPreview}
+            alt="Preview da Logo"
+            className="img-fluid rounded-circle img-logo-production"
+            // Ajusta a largura da imagem para preencher o container
+          />
+        ) : (
+          <img
+            src="/images/productionlogo.png"
+            alt="Preview da Logo"
+            className="img-fluid rounded-circle img-logo-production"
+            // Ajusta a largura da imagem para preencher o container
+          />
+        )}
+      </label>
+      <Form.Control
+        id="logoInput"
+        type="file"
+        accept="image/*"
+        onChange={handleLogoChange}
+        style={{
+          display: "none",
+        }}
+        required
+        className="img-fluid rounded-circle img-logo-production"
+      />
+
       <Container>
-        <Row className="justify-content-md-center">
-          <Col md={4}>
-            <Card>
-              <Form.Group controlId="formLogo">
-                <div className="text-center p-5 bg-secondary rounded">
-                  <label
-                    htmlFor="logoInput"
-                    style={{ cursor: "pointer", display: "block" }}
-                  >
-                    {logoPreview ? (
-                      <img
-                        src={logoPreview}
-                        alt="Preview da Logo"
-                        className="img-fluid rounded-circle"
-                        style={{ maxWidth: "100%", height: "auto" }}
-                      />
-                    ) : (
-                      <i className="fas fa-camera fa-3x img-fluid rounded-circle"></i>
-                    )}
-                  </label>
+          <Row>
+            <Col md={4}>
+              <Card>
+             
+
+                <Form.Group controlId="formName">
                   <Form.Control
-                    id="logoInput"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoChange}
-                    style={{ display: "none" }}
+                    type="text"
+                    name="name"
+                    placeholder="Digite o nome da produção"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     required
                     className="mt-3"
                   />
-                </div>
-                <Form.Text className="text-white text-center mt-2">
-                  Faça upload da logo da produção (Resolução recomendada :
-                  300x300)
-                </Form.Text>
-              </Form.Group>
+                </Form.Group>
+                <Form.Group controlId="formEstablishmentType">
+                  <Form.Control
+                    as="select"
+                    name="establishment_type"
+                    value={formData.establishment_type}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-3"
+                  >
+                    <option value="">Estabelecimento</option>
+                    <option value="Restaurante">Restaurante</option>
+                    <option value="Bar">Bar</option>
+                    <option value="Clube">Clube</option>
+                    <option value="Café">Café</option>
+                    <option value="Pub">Pub</option>
+                    <option value="Lounge">Lounge</option>
+                    <option value="Hotel">Hotel</option>
+                    <option value="Teatro">Teatro</option>
+                    <option value="Cinema">Cinema</option>
+                    <option value="Sala de Concertos">Sala de Concertos</option>
+                    <option value="Boate">Boate</option>
+                    <option value="Academia">Academia</option>
+                    <option value="Spa">Spa</option>
+                    <option value="Padaria">Padaria</option>
+                    <option value="Museu">Museu</option>
+                    <option value="Galeria de Arte">Galeria de Arte</option>
+                    <option value="Parque">Parque</option>
+                    <option value="Praia">Praia</option>
+                    <option value="Piscina">Piscina</option>
+                    <option value="Cassino">Cassino</option>
+                    <option value="Boliche">Boliche</option>
+                    <option value="Sinuca">Sinuca</option>
+                    <option value="Karaoke">Karaoke</option>
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="formPhone">
+                  <Form.Control
+                    type="text"
+                    name="phone"
+                    placeholder="Telefone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-3"
+                  />
+                </Form.Group>
 
-              <Form.Group controlId="formName">
-                <Form.Control
-                  type="text"
-                  name="name"
-                  placeholder="Digite o nome da produção"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-3"
-                />
-              </Form.Group>
-              <Form.Group controlId="formEstablishmentType">
-                <Form.Control
-                  as="select"
-                  name="establishment_type"
-                  value={formData.establishment_type                  }
-                  onChange={handleInputChange}
-                  required
-                  className="mt-3"
-                >
-                  <option value="">Estabelecimento</option>
-                  <option value="Restaurante">Restaurante</option>
-                  <option value="Bar">Bar</option>
-                  <option value="Clube">Clube</option>
-                  <option value="Café">Café</option>
-                  <option value="Pub">Pub</option>
-                  <option value="Lounge">Lounge</option>
-                  <option value="Hotel">Hotel</option>
-                  <option value="Teatro">Teatro</option>
-                  <option value="Cinema">Cinema</option>
-                  <option value="Sala de Concertos">Sala de Concertos</option>
-                  <option value="Boate">Boate</option>
-                  <option value="Academia">Academia</option>
-                  <option value="Spa">Spa</option>
-                  <option value="Padaria">Padaria</option>
-                  <option value="Museu">Museu</option>
-                  <option value="Galeria de Arte">Galeria de Arte</option>
-                  <option value="Parque">Parque</option>
-                  <option value="Praia">Praia</option>
-                  <option value="Piscina">Piscina</option>
-                  <option value="Cassino">Cassino</option>
-                  <option value="Boliche">Boliche</option>
-                  <option value="Sinuca">Sinuca</option>
-                  <option value="Karaoke">Karaoke</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Group controlId="formPhone">
-                <Form.Control
-                  type="text"
-                  name="phone"
-                  placeholder="Telefone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-3"
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formLocation">
-                <Form.Control
-                  type="text"
-                  name="location"
-                  placeholder="URL Google Maps"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-3"
-                />
-              </Form.Group>
-            </Card>
-          </Col>
-          <Col md={8}>
-            <Card>
-              <Row>
-                <Col md={12}>
-                  <Form.Group controlId="formBackground">
-                    <div className="text-center p-5 bg-secondary ">
-                      <label
-                        htmlFor="BackgroundInput"
-                        style={{ cursor: "pointer", display: "block" }}
-                      >
-                        {backgroundPreview ? (
-                          <img
-                            src={backgroundPreview}
-                            alt="Preview da Background"
-                            className="img-fluid"
-                            style={{ maxWidth: "100%", height: "auto" }} 
-                          />
-                        ) : (
-                          <i className="fas fa-camera fa-3x"></i>
-                        )}
-                      </label>
+                <Form.Group controlId="formLocation">
+                  <Form.Control
+                    type="text"
+                    name="location"
+                    placeholder="URL Google Maps"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-3"
+                  />
+                </Form.Group>
+              </Card>
+            </Col>
+            <Col md={8}>
+              <Card>
+                <Row>
+                  <Col md={12}>
+                  <Link
+                          to={`/production/${formData.slug}`}
+                          style={{ textDecoration: "none", color: "white" }}
+                        >
+                          Pagin da produção
+                        </Link>
+                    <Form.Group controlId="formBackground">
+                     
+                      <Form.Text className="text-white text-center mt-2">
+                        Selecione uma imagem de fundo (Resolução recomendada:
+                        1920x1080)
+                      </Form.Text>
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group controlId="formCEP">
                       <Form.Control
-                        id="BackgroundInput"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleBackgroundChange}
-                        style={{ display: "none" }}
+                        type="text"
+                        name="cep"
+                        placeholder="Digite o CEP"
+                        value={formData.cep}
+                        onChange={handleCepChange}
                         required
                         className="mt-3"
                       />
-                    </div>
-                    <Form.Text className="text-white text-center mt-2">
-                      Selecione uma imagem de fundo (Resolução recomendada:
-                      1920x1080)
-                    </Form.Text>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group controlId="formCEP">
-                    <Form.Control
-                      type="text"
-                      name="cep"
-                      placeholder="Digite o CEP"
-                      value={formData.cep}
-                      onChange={handleCepChange}
-                      required
-                      className="mt-3"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={2}>
-                  <Form.Group controlId="formUf">
-                    <Form.Control
-                      as="select"
-                      name="uf"
-                      value={formData.uf}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-3"
-                    >
-                      <option value="">UF</option>
-                      <option value="AC">AC</option>
-                      <option value="AL">AL</option>
-                      <option value="AP">AP</option>
-                      <option value="AM">AM</option>
-                      <option value="BA">BA</option>
-                      <option value="CE">CE</option>
-                      <option value="DF">DF</option>
-                      <option value="ES">ES</option>
-                      <option value="GO">GO</option>
-                      <option value="MA">MA</option>
-                      <option value="MT">MT</option>
-                      <option value="MS">MS</option>
-                      <option value="MG">MG</option>
-                      <option value="PA">PA</option>
-                      <option value="PB">PB</option>
-                      <option value="PR">PR</option>
-                      <option value="PE">PE</option>
-                      <option value="PI">PI</option>
-                      <option value="RJ">RJ</option>
-                      <option value="RN">RN</option>
-                      <option value="RS">RS</option>
-                      <option value="RO">RO</option>
-                      <option value="RR">RR</option>
-                      <option value="SC">SC</option>
-                      <option value="SP">SP</option>
-                      <option value="SE">SE</option>
-                      <option value="TO">TO</option>
-                    </Form.Control>
-                  </Form.Group>
-                </Col>
+                    </Form.Group>
+                  </Col>
+                  <Col md={2}>
+                    <Form.Group controlId="formUf">
+                      <Form.Control
+                        as="select"
+                        name="uf"
+                        value={formData.uf}
+                        onChange={handleInputChange}
+                        required
+                        className="mt-3"
+                        disabled
+                      >
+                        <option value="">UF</option>
+                        <option value="AC">AC</option>
+                        <option value="AL">AL</option>
+                        <option value="AP">AP</option>
+                        <option value="AM">AM</option>
+                        <option value="BA">BA</option>
+                        <option value="CE">CE</option>
+                        <option value="DF">DF</option>
+                        <option value="ES">ES</option>
+                        <option value="GO">GO</option>
+                        <option value="MA">MA</option>
+                        <option value="MT">MT</option>
+                        <option value="MS">MS</option>
+                        <option value="MG">MG</option>
+                        <option value="PA">PA</option>
+                        <option value="PB">PB</option>
+                        <option value="PR">PR</option>
+                        <option value="PE">PE</option>
+                        <option value="PI">PI</option>
+                        <option value="RJ">RJ</option>
+                        <option value="RN">RN</option>
+                        <option value="RS">RS</option>
+                        <option value="RO">RO</option>
+                        <option value="RR">RR</option>
+                        <option value="SC">SC</option>
+                        <option value="SP">SP</option>
+                        <option value="SE">SE</option>
+                        <option value="TO">TO</option>
+                      </Form.Control>
+                    </Form.Group>
+                  </Col>
 
-                <Col md={6}>
-                  <Form.Group controlId="formCity">
+                  <Col md={6}>
+                    <Form.Group controlId="formCity">
+                      <Form.Control
+                        type="text"
+                        name="city"
+                        placeholder="Digite a cidade"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        required
+                        disabled
+                        className="mt-3"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12}>
+                    <Form.Group controlId="formAddress">
+                      <Form.Control
+                        type="text"
+                        name="address"
+                        placeholder="Digite o endereço"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className="mt-3"
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6} className="mt-2">
                     <Form.Control
                       type="text"
-                      name="city"
-                      placeholder="Digite a cidade"
-                      value={formData.city}
+                      name="facebook_url"
+                      placeholder="URL do Facebook"
+                      value={formData.facebook_url}
                       onChange={handleInputChange}
-                      required
-                      className="mt-3"
                     />
-                  </Form.Group>
-                </Col>
-                <Col md={12}>
-                  <Form.Group controlId="formAddress">
+                  </Col>
+                  <Col md={6} className="mt-2">
                     <Form.Control
                       type="text"
-                      name="address"
-                      placeholder="Digite o endereço"
-                      value={formData.address}
+                      name="twitter_url"
+                      placeholder="URL do Twitter"
+                      value={formData.twitter_url}
                       onChange={handleInputChange}
-                      className="mt-3"
-                      required
                     />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6} className="mt-2">
-                  <Form.Control
-                    type="text"
-                    name="facebook_url"
-                    placeholder="URL do Facebook"
-                    value={formData.facebook_url}
-                    onChange={handleInputChange}
-                  />
-                </Col>
-                <Col md={6} className="mt-2">
-                  <Form.Control
-                    type="text"
-                    name="twitter_url"
-                    placeholder="URL do Twitter"
-                    value={formData.twitter_url}
-                    onChange={handleInputChange}
-                  />
-                </Col>
-                <Col md={6} className="mt-2">
-                  <Form.Control
-                    type="text"
-                    name="instagram_url"
-                    placeholder="URL do Instagram"
-                    value={formData.instagram_url}
-                    onChange={handleInputChange}
-                  />
-                </Col>
-                <Col md={6} className="mt-2">
-                  <Form.Control
-                    type="text"name="youtube_url"
-                    placeholder="URL do YouTube"
-                    value={formData.youtube_url}
-                    onChange={handleInputChange}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                {/* Descrição */}
-                <Col md={12} className="mt-2">
-                  <Form.Group controlId="formDescription">
+                  </Col>
+                  <Col md={6} className="mt-2">
                     <Form.Control
-                      as="textarea"
-                      rows={3}
-                      name="description"
-                      placeholder="Digite a descrição da produção"
-                      value={formData.description}
+                      type="text"
+                      name="instagram_url"
+                      placeholder="URL do Instagram"
+                      value={formData.instagram_url}
                       onChange={handleInputChange}
-                      required
                     />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={loading}
-                className="mt-4 btn-lg"
-                onClick={handleSubmit}
-              >
-                {loading ? "Carregando..." : "Salvar"}
-              </Button>
-            </Card>
-          </Col>
-        </Row>
+                  </Col>
+                  <Col md={6} className="mt-2">
+                    <Form.Control
+                      type="text"
+                      name="youtube_url"
+                      placeholder="URL do YouTube"
+                      value={formData.youtube_url}
+                      onChange={handleInputChange}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  {/* Descrição */}
+                  <Col md={12} className="mt-2">
+                    <Form.Group controlId="formDescription">
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="description"
+                        placeholder="Digite a descrição da produção"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+            <Col md={12} className="mt-2">
+              <Card>
+                <Card.Title>Seguimentos</Card.Title>
+                <Row>
+                  {/* Renderização dos seguimentos em colunas */}
+                  {segmentChunks.map((chunk, index) => (
+                    <React.Fragment key={index}>
+                      {chunk.map(([key, value]) => (
+                        <Col md={2} key={key}>
+                          {/* Check if formData and segments are not null before accessing */}
+                          <Form.Check
+                            type="checkbox"
+                            label={value.name}
+                            checked={
+                              formData &&
+                              formData.segments &&
+                              formData.segments.includes(key)
+                            }
+                            onChange={() => handleSeguimentsChange(key)}
+                            className="mt-2"
+                          />
+                        </Col>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </Row>
+                {/* Botão de envio do formulário */}
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={loading}
+                  className="mt-4 btn-lg"
+                  onClick={handleSubmit}
+                >
+                  {loading ? "Carregando..." : "Salvar"}
+                </Button>
+              </Card>
+            </Col>
+          </Row>
       </Container>
       {successMessage && (
         <Alert
@@ -511,6 +564,3 @@ const ProductionUpdatePage = () => {
 };
 
 export default ProductionUpdatePage;
-
-                   
-

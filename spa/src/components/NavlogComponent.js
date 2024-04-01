@@ -35,10 +35,10 @@ const Navigation = () => {
       <Container>
         <Navbar.Brand as={Link} to="/" onClick={closeMenu}>
           <img
-            src="/images/loadingimage.gif"
+            src="/images/logo.png"
             alt="Logo"
             className="rounded-circle"
-            style={{ width: "50px", height: "50px" }}
+            style={{ width: "60px", height: "60px" }}
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarNav" onClick={toggleMenu} />

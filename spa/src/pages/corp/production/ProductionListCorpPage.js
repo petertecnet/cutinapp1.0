@@ -79,11 +79,26 @@ const ProductionListCorpPage = () => {
           <Col md={12} className="mt-5">
             <Card className="mt-5">
               <Card.Body>
-                <Card.Title>Suas produções</Card.Title>
+              <Link to="/production/create">
+          <Button
+            variant="primary"
+            disabled={loading}
+           
+          >
+        
+        <i className="bi bi-plus-circle  m-2 "></i>
+          </Button>
+        </Link>
                 <Row>
           {productions.map((production) => (
             <Col key={production.id} md={12}>
-              <Card>
+          <Card className="card-production" >
+  <div
+    className="background-image"
+    style={{
+      backgroundImage: `url('${storageUrl}/${production.background}')`,
+    }}
+  />
               <Link
                       to={`/production/view/${production.slug}`}
                       style={{ textDecoration: "none", color: "white",  textTransform: "uppercase"  }}
@@ -95,7 +110,7 @@ const ProductionListCorpPage = () => {
                 <Row>
                   <Col md={4}>
                     <Link
-                      to={`/production/view/${production.slug}`}
+                      to={`/production/${production.slug}`}
                       style={{ textDecoration: "none" }}
                     >
                       <Card.Img
@@ -114,7 +129,8 @@ const ProductionListCorpPage = () => {
                           to={`/production/update/${production.id}`}
                           style={{ textDecoration: "none", color: "white" }}
                         >
-                          Edit
+                          
+                  <i className="bi bi-pencil-square  m-2 "></i>
                         </Link>
                       </Button>
                       <Button
@@ -123,7 +139,8 @@ const ProductionListCorpPage = () => {
                         className="m-1"
                         onClick={() => handleShowConfirmModal(production.id)}
                       >
-                        Delete
+                        
+                  <i className="bi bi-trash  m-2 "></i>
                       </Button>
                     </Card.Body>
                   </Col>
@@ -139,20 +156,7 @@ const ProductionListCorpPage = () => {
             </Card>
           </Col>
         </Row>
-        <Link to="/production/create">
-          <Button
-            variant="primary"
-            disabled={loading}
-            style={{
-              position: "fixed",
-              bottom: "50px",
-              right: "20px",
-              zIndex: "1000",
-            }}
-          >
-            {loading ? "Loading..." : "Add"}
-          </Button>
-        </Link>
+      
       </Container>
 
       <Modal
@@ -168,7 +172,7 @@ const ProductionListCorpPage = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="danger"
@@ -177,7 +181,7 @@ const ProductionListCorpPage = () => {
               handleCloseModal();
             }}
           >
-            Delete
+            Excluir
           </Button>
         </Modal.Footer>
       </Modal>

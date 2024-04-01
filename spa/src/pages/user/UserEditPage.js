@@ -419,6 +419,7 @@ const UserEditPage = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
+                        disabled
                         required
                       />
                     </Form.Group>
@@ -431,6 +432,7 @@ const UserEditPage = () => {
                         name="uf"
                         value={formData.uf}
                         onChange={handleInputChange}
+                        disabled
                         required
                       />
                     </Form.Group>

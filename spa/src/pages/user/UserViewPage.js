@@ -122,7 +122,7 @@ const UserViewPage = () => {
           {user.productions.map((production) => (
             <Col key={production.id} md={4}>
               <Link
-                to={`/production/view/${production.slug}`}
+                to={`/production/${production.slug}`}
                 style={{ textDecoration: "none" }}
               >
                  <Card>

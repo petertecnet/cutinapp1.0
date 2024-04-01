@@ -13,11 +13,13 @@ import NavlogComponent from "../../components/NavlogComponent";
 import cepUtil from "../../utils/cep";
 import { Link } from "react-router-dom";
 import LoadingComponent from "../../components/LoadingComponent";
+import seguiments from "../../utils/seguiments";
 
 const ProductionCreatePage = () => {
   const [formData, setFormData] = useState({
     name: "",
     cnpj: "",
+    selectedPermissions: [],
     fantasy: "",
     type: "",
     phone: "",
@@ -84,7 +86,6 @@ const ProductionCreatePage = () => {
     };
     reader.readAsDataURL(file);
   };
-  
 
   const handleBackgroundChange = (e) => {
     const file = e.target.files[0];
@@ -169,6 +170,25 @@ const ProductionCreatePage = () => {
     }
   };
 
+  const handleSeguimentsChange = (seguimentId) => {
+    // Lógica para adicionar/remover o seguimento selecionado da matriz de seguimentos no estado
+    const updatedSegments = formData.segments.includes(seguimentId)
+      ? formData.segments.filter((id) => id !== seguimentId)
+      : [...formData.segments, seguimentId];
+    setFormData({ ...formData, segments: updatedSegments });
+  };
+
+  // Divide os seguimentos em 6 colunas
+  const segmentsPerColumn = 6; // Sempre 6 colunas
+  const segmentChunks = Array.from(
+    { length: Math.ceil(Object.keys(seguiments).length / segmentsPerColumn) },
+    (_, index) =>
+      Object.entries(seguiments).slice(
+        index * segmentsPerColumn,
+        index * segmentsPerColumn + segmentsPerColumn
+      )
+  );
+
   useEffect(() => {
     let timer;
     if (error || successMessage) {
@@ -194,7 +214,7 @@ const ProductionCreatePage = () => {
           <img
             src={backgroundPreview}
             alt="Preview da Background"
-            className="img-fluid"
+            className="img-fluid "
           />
         ) : (
           <img
@@ -212,47 +232,52 @@ const ProductionCreatePage = () => {
         style={{ display: "none" }}
         required
       />
-    <Form.Control
+      <Form.Control
         id="BackgroundInput"
         type="file"
         accept="image/*"
         onChange={handleBackgroundChange}
         style={{ display: "none" }}
         required
-    />
-                  <label htmlFor="logoInput"   style={{ cursor: "pointer", display: "block" }}>
-                    {logoPreview ? (
-                      <img
-                        src={logoPreview}
-                        alt="Preview da Logo"
-                        className="img-fluid rounded-circle img-logo-production"
-                        // Ajusta a largura da imagem para preencher o container
-                      />
-                    ) : (
-                      <img
-                      src="/images/productionlogo.png"
-                      alt="Preview da Logo"
-                      className="img-fluid rounded-circle img-logo-production"
-                      // Ajusta a largura da imagem para preencher o container
-                    />    )}
-                  </label>
-                  <Form.Control
-                    id="logoInput"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoChange}
-                    style={{
-                      display: "none"
-                    }}
-                    required
-                    className="img-fluid rounded-circle img-logo-production"
-                  />
+      />
+      <label
+        htmlFor="logoInput"
+        style={{ cursor: "pointer", display: "block" }}
+      >
+        {logoPreview ? (
+          <img
+            src={logoPreview}
+            alt="Preview da Logo"
+            className="img-fluid rounded-circle img-logo-production"
+            // Ajusta a largura da imagem para preencher o container
+          />
+        ) : (
+          <img
+            src="/images/productionlogo.png"
+            alt="Preview da Logo"
+            className="img-fluid rounded-circle img-logo-production"
+            // Ajusta a largura da imagem para preencher o container
+          />
+        )}
+      </label>
+      <Form.Control
+        id="logoInput"
+        type="file"
+        accept="image/*"
+        onChange={handleLogoChange}
+        style={{
+          display: "none",
+        }}
+        required
+        className="img-fluid rounded-circle img-logo-production"
+      />
 
       <Container>
         <Row className="justify-content-md-center">
+          
+        <p className="labeltitle h2 text-center text-uppercase">Adicionar nova produção</p>
           <Col md={4}>
             <Card>
-
               <Form.Group controlId="formName">
                 <Form.Control
                   type="text"
@@ -311,18 +336,6 @@ const ProductionCreatePage = () => {
                   className="mt-3"
                 />
               </Form.Group>
-              <Form.Group controlId="formFantasy">
-                <Form.Control
-                  type="text"
-                  name="fantasy"
-                  placeholder="Nome fantasia"
-                  value={formData.fantasy}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-3"
-                  disabled
-                />
-              </Form.Group>
 
               <Form.Group controlId="formPhone">
                 <Form.Control
@@ -349,7 +362,6 @@ const ProductionCreatePage = () => {
             </Card>
           </Col>
           <Col md={8}>
-         
             <Card>
               <Row>
                 <Col md={12} className="mt-2">
@@ -430,7 +442,8 @@ const ProductionCreatePage = () => {
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="mt-3" disabled
+                      className="mt-3"
+                      disabled
                     />
                   </Form.Group>
                 </Col>
@@ -486,8 +499,32 @@ const ProductionCreatePage = () => {
                   />
                 </Col>
               </Row>
-              <Row>                
-              </Row>
+
+            </Card>
+          </Col>
+          <Row className="justify-content-md-center">
+            <Col md={12}>
+              <Card>
+                <Card.Title>Seguimentos</Card.Title>
+                <Row>
+                  {/* Renderiza as 6 colunas */}
+                  {segmentChunks.map((chunk, index) => (
+                    <React.Fragment key={index}>
+                      {chunk.map(([key, value]) => (
+                        <Col md={2} key={key}>
+                          <Form.Check
+                            type="checkbox"
+                            label={value.name}
+                            checked={formData.segments.includes(key)}
+                            onChange={() => handleSeguimentsChange(key)}
+                            className="mt-2"
+                          />
+                        </Col>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </Row>
+                
               <Button
                 variant="primary"
                 type="submit"
@@ -497,8 +534,11 @@ const ProductionCreatePage = () => {
               >
                 {loading ? "Carregando..." : "Salvar"}
               </Button>
-            </Card>
-          </Col>
+              </Card>
+            </Col>
+            
+          </Row>
+          
         </Row>
       </Container>
       {successMessage && (
@@ -519,7 +559,6 @@ const ProductionCreatePage = () => {
       <Link to="/productions">
         <Button
           variant="secondary"
-          disabled={loading}
           style={{
             position: "fixed",
             bottom: "50px",
@@ -527,7 +566,7 @@ const ProductionCreatePage = () => {
             zIndex: "1000",
           }}
         >
-          {loading ? "Carregando..." : "Listar"}
+          Listar
         </Button>
       </Link>
     </>
